@@ -1,0 +1,49 @@
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - deploy
+
+build-job-dev:       # This job runs in the build stage, which runs first.
+  stage: build
+  only:
+    - dev
+  tags:
+    - registry
+  script:
+    - echo "Build and push the new image"
+    - docker build -t registry.kecilin.id/tni-au/dummy-simpers-au-api:dev-latest .
+    - docker push registry.kecilin.id/tni-au/dummy-simpers-au-api:dev-latest
+
+deploy-job-dev:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  only:
+    - dev
+  tags:
+    - dev-server-new
+  script:
+    - echo "Start deployment"
+    - cd /home/kecilinid/tni-au/docker
+    - docker compose -f be.yaml pull dummy-simpers-au-api
+    - docker compose -f be.yaml up dummy-simpers-au-api -d #automatically down and up
+
+build-job-pre:       # This job runs in the build stage, which runs first.
+  stage: build
+  only:
+    - pre
+  tags:
+    - registry
+  script:
+    - echo "Build and push the new image"
+    - docker build -t registry.kecilin.id/tni-au/dummy-simpers-au-api:pre-latest .
+    - docker push registry.kecilin.id/tni-au/dummy-simpers-au-api:pre-latest
+
+deploy-job-pre:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  only:
+    - pre
+  tags:
+    - poc-server-new
+  script:
+    - echo "Start deployment"
+    - cd /home/kecilinid/tni-au/docker
+    - docker compose -f be.yaml pull dummy-simpers-au-api
+    - docker compose -f be.yaml up dummy-simpers-au-api -d #automatically down and up
