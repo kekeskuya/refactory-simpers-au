@@ -7,11 +7,13 @@ import (
 )
 
 type Repositories struct {
-	PersonnelRepository repository.PersonnelRepository
+	PersonelRepository repository.PersonelRepository
+	NPWPRepository     repository.NPWPRepository
 }
 
 func NewRepositories(wrapDB *database.WrapDB, env *config.EnvironmentVariable) Repositories {
 	return Repositories{
-		PersonnelRepository: repository.NewPersonnelRepository(wrapDB, env),
+		PersonelRepository: repository.NewPersonelRepository(wrapDB, env),
+		NPWPRepository:     repository.NewNPWPRepository(wrapDB, env),
 	}
 }

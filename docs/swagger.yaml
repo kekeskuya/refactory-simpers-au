@@ -1,9 +1,147 @@
+definitions:
+  dto.GetNPWPByNRPResponse:
+    properties:
+      id:
+        example: 138
+        type: integer
+      npwp:
+        example: "916143918988772"
+        type: string
+      nrp:
+        example: "120398109238"
+        type: string
+    type: object
+  dto.GetPersonelByNRPResponse:
+    properties:
+      id:
+        example: 138
+        type: integer
+      jabatan:
+        example: Staff Khusus Kasau
+        type: string
+      korps:
+        example: Lek
+        type: string
+      nama:
+        example: Max Verstappen
+        type: string
+      nrp:
+        example: "120398109238"
+        type: string
+      pangkat:
+        example: Marsekal Pertama TNI
+        type: string
+      profesi:
+        example: Elektronik
+        type: string
+      satuan_kerja:
+        example: Kasau
+        type: string
+      spesialisasi:
+        example: Simulator
+        type: string
+      status_keaktifan:
+        example: true
+        type: boolean
+      tanggal_lahir:
+        example: 21-05-1969
+        type: string
+      tempat_lahir:
+        example: Magelang
+        type: string
+      terhitung_masuk_tanggal:
+        example: 28-09-1991
+        type: string
+      terhitung_mulai_tanggal:
+        example: 30-01-1997
+        type: string
+    type: object
+  lib.APIResponse:
+    properties:
+      data: {}
+      message:
+        example: OK
+        type: string
+      success:
+        default: true
+        type: boolean
+    type: object
+  lib.HTTPError:
+    properties:
+      error: {}
+      message:
+        type: string
+      success:
+        default: false
+        type: boolean
+    type: object
 info:
   contact: {}
-paths: {}
-securityDefinitions:
-  BearerAuth:
-    in: header
-    name: Authorization
-    type: apiKey
+paths:
+  /personel/{nrp}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: NRP personel
+        in: path
+        name: nrp
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/lib.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetPersonelByNRPResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.HTTPError'
+      summary: Get Personel berdasarkan NRP
+      tags:
+      - Personel
+  /personel/{nrp}/npwp:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: NRP personel
+        in: path
+        name: nrp
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/lib.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetNPWPByNRPResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.HTTPError'
+      summary: Get NPWP berdasarkan NRP
+      tags:
+      - Personel
 swagger: "2.0"

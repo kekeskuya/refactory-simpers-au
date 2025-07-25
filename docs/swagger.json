@@ -3,12 +3,223 @@
     "info": {
         "contact": {}
     },
-    "paths": {},
-    "securityDefinitions": {
-        "BearerAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
+    "paths": {
+        "/personel/{nrp}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Personel"
+                ],
+                "summary": "Get Personel berdasarkan NRP",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "NRP personel",
+                        "name": "nrp",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/lib.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetPersonelByNRPResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/lib.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/lib.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/personel/{nrp}/npwp": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Personel"
+                ],
+                "summary": "Get NPWP berdasarkan NRP",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "NRP personel",
+                        "name": "nrp",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/lib.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetNPWPByNRPResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/lib.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/lib.HTTPError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.GetNPWPByNRPResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 138
+                },
+                "npwp": {
+                    "type": "string",
+                    "example": "916143918988772"
+                },
+                "nrp": {
+                    "type": "string",
+                    "example": "120398109238"
+                }
+            }
+        },
+        "dto.GetPersonelByNRPResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 138
+                },
+                "jabatan": {
+                    "type": "string",
+                    "example": "Staff Khusus Kasau"
+                },
+                "korps": {
+                    "type": "string",
+                    "example": "Lek"
+                },
+                "nama": {
+                    "type": "string",
+                    "example": "Max Verstappen"
+                },
+                "nrp": {
+                    "type": "string",
+                    "example": "120398109238"
+                },
+                "pangkat": {
+                    "type": "string",
+                    "example": "Marsekal Pertama TNI"
+                },
+                "profesi": {
+                    "type": "string",
+                    "example": "Elektronik"
+                },
+                "satuan_kerja": {
+                    "type": "string",
+                    "example": "Kasau"
+                },
+                "spesialisasi": {
+                    "type": "string",
+                    "example": "Simulator"
+                },
+                "status_keaktifan": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "tanggal_lahir": {
+                    "type": "string",
+                    "example": "21-05-1969"
+                },
+                "tempat_lahir": {
+                    "type": "string",
+                    "example": "Magelang"
+                },
+                "terhitung_masuk_tanggal": {
+                    "type": "string",
+                    "example": "28-09-1991"
+                },
+                "terhitung_mulai_tanggal": {
+                    "type": "string",
+                    "example": "30-01-1997"
+                }
+            }
+        },
+        "lib.APIResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string",
+                    "example": "OK"
+                },
+                "success": {
+                    "type": "boolean",
+                    "default": true
+                }
+            }
+        },
+        "lib.HTTPError": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
         }
     }
 }

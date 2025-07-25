@@ -38,6 +38,12 @@ func NewRouter(h Handler) *gin.Engine {
 	r.Use(otelgin.Middleware(h.Env.Tracer.ServiceName))
 	r.Use(h.Middleware.TracerMiddleware())
 
+	personel := r.Group("/personel")
+	{
+		personel.GET("/:nrp", h.SimpersHandler.GetPersonelByNRP)
+		personel.GET("/:nrp/npwp", h.SimpersHandler.GetNPWPByNRP)
+	}
+
 	return r
 }
 

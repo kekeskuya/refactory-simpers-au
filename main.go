@@ -10,10 +10,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// @securityDefinitions.apikey BearerAuth
-// @in header
-// @name Authorization
-
 func main() {
 	ctx := context.Background()
 	env, err := config.LoadEnv()
