@@ -92,7 +92,8 @@ func RespondSuccessPaginated(ctx *gin.Context, code int, message string, data in
 }
 
 const (
-	MsgOk = "OK"
+	MsgOk             = "OK"
+	MsgDokumenSuccess = "Berhasil mendapatkan data %s"
 )
 
 // Error

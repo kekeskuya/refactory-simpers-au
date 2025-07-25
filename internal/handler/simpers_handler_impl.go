@@ -5,6 +5,7 @@ import (
 	"dummy-simpers-au/constants"
 	"dummy-simpers-au/internal/service"
 	"dummy-simpers-au/lib"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -76,5 +77,5 @@ func (h *SimpersHandlerImpl) GetNPWPByNRP(ctx *gin.Context) {
 		return
 	}
 
-	lib.RespondSuccess(ctx, http.StatusOK, lib.MsgOk, resp)
+	lib.RespondSuccess(ctx, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, constants.DataNPWP), resp)
 }
