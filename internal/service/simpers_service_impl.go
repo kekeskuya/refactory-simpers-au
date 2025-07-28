@@ -14,6 +14,8 @@ type SimpersServiceImpl struct {
 	db           *pgxpool.Pool
 	personelRepo repository.PersonelRepository
 	npwpRepo     repository.NPWPRepository
+	asabriRepo   repository.AsabriRepository
+	pasporRepo   repository.PasporRepository
 }
 
 func NewSimpersService(
@@ -21,12 +23,16 @@ func NewSimpersService(
 	db *pgxpool.Pool,
 	personelRepo repository.PersonelRepository,
 	npwpRepo repository.NPWPRepository,
+	asabriRepo repository.AsabriRepository,
+	pasporRepo repository.PasporRepository,
 ) SimpersService {
 	return &SimpersServiceImpl{
 		env:          env,
 		db:           db,
 		personelRepo: personelRepo,
 		npwpRepo:     npwpRepo,
+		asabriRepo:   asabriRepo,
+		pasporRepo:   pasporRepo,
 	}
 }
 
@@ -93,6 +99,46 @@ func (s *SimpersServiceImpl) GetNPWPByNRP(nrp string) (out dto.GetNPWPByNRPRespo
 		ID:   int(npwp.ID),
 		NRP:  npwp.NRP,
 		NPWP: npwp.NPWP,
+	}
+
+	return
+}
+
+func (s *SimpersServiceImpl) GetAsabriByNRP(nrp string) (out dto.GetAsabriByNRPResponse, err error) {
+	asabri, err := s.asabriRepo.GetByNRP(nrp)
+	if err != nil {
+		return out, err
+	}
+
+	if asabri.IsEmpty() {
+		err = constants.ErrorMessageDataNotFound
+		return out, err
+	}
+
+	out = dto.GetAsabriByNRPResponse{
+		ID:     int(asabri.ID),
+		NRP:    asabri.NRP,
+		Asabri: asabri.NomorAsabri,
+	}
+
+	return
+}
+
+func (s *SimpersServiceImpl) GetPasporByNRP(nrp string) (out dto.GetPasporByNRPResponse, err error) {
+	paspor, err := s.pasporRepo.GetByNRP(nrp)
+	if err != nil {
+		return out, err
+	}
+
+	if paspor.IsEmpty() {
+		err = constants.ErrorMessageDataNotFound
+		return out, err
+	}
+
+	out = dto.GetPasporByNRPResponse{
+		ID:          int(paspor.ID),
+		NRP:         paspor.NRP,
+		NomorPaspor: paspor.NomorPassport,
 	}
 
 	return

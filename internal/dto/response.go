@@ -22,3 +22,15 @@ type GetNPWPByNRPResponse struct {
 	NRP  string `json:"nrp" example:"120398109238"`
 	NPWP string `json:"npwp" example:"916143918988772"`
 }
+
+type GetAsabriByNRPResponse struct {
+	ID     int    `json:"id" example:"138"`
+	NRP    string `json:"nrp" example:"120398109238"`
+	Asabri string `json:"asabri" example:"AS4826315003"`
+}
+
+type GetPasporByNRPResponse struct {
+	ID          int    `json:"id" example:"138"`
+	NRP         string `json:"nrp" example:"120398109238"`
+	NomorPaspor string `json:"nomor_paspor" example:"P27418523ID"`
+}

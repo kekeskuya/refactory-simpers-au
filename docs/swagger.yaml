@@ -1,4 +1,16 @@
 definitions:
+  dto.GetAsabriByNRPResponse:
+    properties:
+      asabri:
+        example: AS4826315003
+        type: string
+      id:
+        example: 138
+        type: integer
+      nrp:
+        example: "120398109238"
+        type: string
+    type: object
   dto.GetNPWPByNRPResponse:
     properties:
       id:
@@ -6,6 +18,18 @@ definitions:
         type: integer
       npwp:
         example: "916143918988772"
+        type: string
+      nrp:
+        example: "120398109238"
+        type: string
+    type: object
+  dto.GetPasporByNRPResponse:
+    properties:
+      id:
+        example: 138
+        type: integer
+      nomor_paspor:
+        example: P27418523ID
         type: string
       nrp:
         example: "120398109238"
@@ -111,6 +135,39 @@ paths:
       summary: Get Personel berdasarkan NRP
       tags:
       - Personel
+  /personel/{nrp}/asabri:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: NRP personel
+        in: path
+        name: nrp
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/lib.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetAsabriByNRPResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.HTTPError'
+      summary: Get Asabri berdasarkan NRP
+      tags:
+      - Personel
   /personel/{nrp}/npwp:
     get:
       consumes:
@@ -142,6 +199,39 @@ paths:
           schema:
             $ref: '#/definitions/lib.HTTPError'
       summary: Get NPWP berdasarkan NRP
+      tags:
+      - Personel
+  /personel/{nrp}/paspor:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: NRP personel
+        in: path
+        name: nrp
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/lib.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetPasporByNRPResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.HTTPError'
+      summary: Get Paspor berdasarkan NRP
       tags:
       - Personel
 swagger: "2.0"

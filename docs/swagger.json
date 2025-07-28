@@ -59,6 +59,61 @@
                 }
             }
         },
+        "/personel/{nrp}/asabri": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Personel"
+                ],
+                "summary": "Get Asabri berdasarkan NRP",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "NRP personel",
+                        "name": "nrp",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/lib.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetAsabriByNRPResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/lib.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/lib.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/personel/{nrp}/npwp": {
             "get": {
                 "consumes": [
@@ -113,9 +168,81 @@
                     }
                 }
             }
+        },
+        "/personel/{nrp}/paspor": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Personel"
+                ],
+                "summary": "Get Paspor berdasarkan NRP",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "NRP personel",
+                        "name": "nrp",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/lib.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetPasporByNRPResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/lib.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/lib.HTTPError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "dto.GetAsabriByNRPResponse": {
+            "type": "object",
+            "properties": {
+                "asabri": {
+                    "type": "string",
+                    "example": "AS4826315003"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 138
+                },
+                "nrp": {
+                    "type": "string",
+                    "example": "120398109238"
+                }
+            }
+        },
         "dto.GetNPWPByNRPResponse": {
             "type": "object",
             "properties": {
@@ -126,6 +253,23 @@
                 "npwp": {
                     "type": "string",
                     "example": "916143918988772"
+                },
+                "nrp": {
+                    "type": "string",
+                    "example": "120398109238"
+                }
+            }
+        },
+        "dto.GetPasporByNRPResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 138
+                },
+                "nomor_paspor": {
+                    "type": "string",
+                    "example": "P27418523ID"
                 },
                 "nrp": {
                     "type": "string",

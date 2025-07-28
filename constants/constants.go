@@ -3,5 +3,7 @@ package constants
 const (
 	MessageSuccess = "Success"
 
-	DataNPWP = "npwp"
+	DataNPWP   = "npwp"
+	DataAsabri = "asabri"
+	DataPaspor = "paspor"
 )

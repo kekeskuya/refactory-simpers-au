@@ -15,7 +15,7 @@ func NewServices(
 	r Repositories,
 	db *database.WrapDB,
 ) Services {
-	simpersService := service.NewSimpersService(env, db.Postgres.Conn, r.PersonelRepository, r.NPWPRepository)
+	simpersService := service.NewSimpersService(env, db.Postgres.Conn, r.PersonelRepository, r.NPWPRepository, r.AsabriRepository, r.PasporRepository)
 	return Services{
 		SimpersService: simpersService,
 	}
