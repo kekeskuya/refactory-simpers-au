@@ -3,10 +3,14 @@ package handler
 import (
 	"dummy-simpers-au/config"
 	"dummy-simpers-au/constants"
+	"dummy-simpers-au/internal/dto"
 	"dummy-simpers-au/internal/service"
 	"dummy-simpers-au/lib"
+	"dummy-simpers-au/utils"
+	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -132,4 +136,59 @@ func (h *SimpersHandlerImpl) GetPasporByNRP(ctx *gin.Context) {
 	}
 
 	lib.RespondSuccess(ctx, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, constants.DataPaspor), resp)
+}
+
+// CreateLampiran godoc
+// @Summary Menambahkan lampiran berdasarkan id dokumen dan tipe dokumen
+// @Tags Lampiran
+// @Accept json
+// @Produce json
+// @Param        	tipe-dokumen    path   			string  					true  "tipe dokumen" Enums(npwp,asabri,paspor)
+// @Param        	id-dokumen    	path   			number  					true  "id dokumen"
+// @Param         	lampiran        body    		dto.CreateLampiranRequest  	true  "Payload lampiran"
+// @Success 		200 			{object}		lib.APIResponse{data=dto.GetPasporByNRPResponse}
+// @Failure      	400  			{object}  		lib.HTTPError
+// @Failure      	500  			{object}  		lib.HTTPError
+// @Router /{tipe-dokumen}/{id-dokumen}/lampiran [post]
+func (h *SimpersHandlerImpl) CreateLampiran(ctx *gin.Context) {
+	docIdStr := ctx.Param("id-dokumen")
+	if docIdStr == "" {
+		err := constants.ErrorMessageInvalidInput
+		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	docID, err := strconv.Atoi(docIdStr)
+	if err != nil {
+		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	docType := ctx.Param("tipe-dokumen")
+	if docType == "" {
+		err := constants.ErrorMessageInvalidInput
+		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	if !utils.IsExistsInList(constants.AllowedDocType, docType) {
+		err := errors.New("category not supported")
+		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	var req dto.CreateLampiranRequest
+	err = ctx.ShouldBindJSON(&req)
+	if err != nil {
+		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	resp, err := h.SimpersService.CreateLampiran(req, docID, docType)
+	if err != nil {
+		lib.RespondError(ctx, http.StatusInternalServerError, err.Error(), err)
+		return
+	}
+
+	lib.RespondSuccess(ctx, http.StatusOK, fmt.Sprintf(lib.MsgLampiranSuccess, constants.DataPaspor), resp)
 }

@@ -7,4 +7,5 @@ type SimpersHandler interface {
 	GetNPWPByNRP(ctx *gin.Context)
 	GetAsabriByNRP(ctx *gin.Context)
 	GetPasporByNRP(ctx *gin.Context)
+	CreateLampiran(ctx *gin.Context)
 }

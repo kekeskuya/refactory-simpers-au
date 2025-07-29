@@ -11,6 +11,7 @@ type Repositories struct {
 	NPWPRepository     repository.NPWPRepository
 	AsabriRepository   repository.AsabriRepository
 	PasporRepository   repository.PasporRepository
+	LampiranRepository repository.LampiranRepository
 }
 
 func NewRepositories(wrapDB *database.WrapDB, env *config.EnvironmentVariable) Repositories {
@@ -19,5 +20,6 @@ func NewRepositories(wrapDB *database.WrapDB, env *config.EnvironmentVariable) R
 		NPWPRepository:     repository.NewNPWPRepository(wrapDB, env),
 		AsabriRepository:   repository.NewAsabriRepository(wrapDB, env),
 		PasporRepository:   repository.NewPasporRepository(wrapDB, env),
+		LampiranRepository: repository.NewLampiranRepository(wrapDB, env),
 	}
 }

@@ -34,3 +34,7 @@ type GetPasporByNRPResponse struct {
 	NRP         string `json:"nrp" example:"120398109238"`
 	NomorPaspor string `json:"nomor_paspor" example:"P27418523ID"`
 }
+
+type CreateLampiranResponse struct {
+	ID int `json:"id" example:"1"`
+}

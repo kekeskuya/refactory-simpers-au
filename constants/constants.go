@@ -7,3 +7,11 @@ const (
 	DataAsabri = "asabri"
 	DataPaspor = "paspor"
 )
+
+type Category string
+
+const (
+	CategoryNPWP   Category = DataNPWP
+	CategoryAsabri Category = DataAsabri
+	CategoryPaspor Category = DataPaspor
+)

@@ -53,6 +53,7 @@ CREATE TABLE "lampiran" (
   "id" BIGSERIAL PRIMARY KEY,
   "kategori" category,
   "personel_id" int,
+  "dokumen_id" int,
   "link" varchar,
   "nama" varchar,
   "keterangan" varchar,

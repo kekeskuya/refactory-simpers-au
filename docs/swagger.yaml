@@ -1,4 +1,11 @@
 definitions:
+  dto.CreateLampiranRequest:
+    properties:
+      file_path:
+        type: string
+    required:
+    - file_path
+    type: object
   dto.GetAsabriByNRPResponse:
     properties:
       asabri:
@@ -102,6 +109,54 @@ definitions:
 info:
   contact: {}
 paths:
+  /{tipe-dokumen}/{id-dokumen}/lampiran:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: tipe dokumen
+        enum:
+        - npwp
+        - asabri
+        - paspor
+        in: path
+        name: tipe-dokumen
+        required: true
+        type: string
+      - description: id dokumen
+        in: path
+        name: id-dokumen
+        required: true
+        type: number
+      - description: Payload lampiran
+        in: body
+        name: lampiran
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateLampiranRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/lib.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GetPasporByNRPResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/lib.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/lib.HTTPError'
+      summary: Menambahkan lampiran berdasarkan id dokumen dan tipe dokumen
+      tags:
+      - Lampiran
   /personel/{nrp}:
     get:
       consumes:

@@ -234,9 +234,96 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/{tipe-dokumen}/{id-dokumen}/lampiran": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Lampiran"
+                ],
+                "summary": "Menambahkan lampiran berdasarkan id dokumen dan tipe dokumen",
+                "parameters": [
+                    {
+                        "enum": [
+                            "npwp",
+                            "asabri",
+                            "paspor"
+                        ],
+                        "type": "string",
+                        "description": "tipe dokumen",
+                        "name": "tipe-dokumen",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "id dokumen",
+                        "name": "id-dokumen",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload lampiran",
+                        "name": "lampiran",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateLampiranRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/lib.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.GetPasporByNRPResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/lib.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/lib.HTTPError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "dto.CreateLampiranRequest": {
+            "type": "object",
+            "required": [
+                "file_path"
+            ],
+            "properties": {
+                "file_path": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.GetAsabriByNRPResponse": {
             "type": "object",
             "properties": {

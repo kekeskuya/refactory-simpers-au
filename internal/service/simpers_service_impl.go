@@ -4,7 +4,9 @@ import (
 	"dummy-simpers-au/config"
 	"dummy-simpers-au/constants"
 	"dummy-simpers-au/internal/dto"
+	"dummy-simpers-au/internal/model"
 	"dummy-simpers-au/internal/repository"
+	"path/filepath"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -16,6 +18,7 @@ type SimpersServiceImpl struct {
 	npwpRepo     repository.NPWPRepository
 	asabriRepo   repository.AsabriRepository
 	pasporRepo   repository.PasporRepository
+	lampiranRepo repository.LampiranRepository
 }
 
 func NewSimpersService(
@@ -25,6 +28,7 @@ func NewSimpersService(
 	npwpRepo repository.NPWPRepository,
 	asabriRepo repository.AsabriRepository,
 	pasporRepo repository.PasporRepository,
+	lampiranRepo repository.LampiranRepository,
 ) SimpersService {
 	return &SimpersServiceImpl{
 		env:          env,
@@ -33,6 +37,7 @@ func NewSimpersService(
 		npwpRepo:     npwpRepo,
 		asabriRepo:   asabriRepo,
 		pasporRepo:   pasporRepo,
+		lampiranRepo: lampiranRepo,
 	}
 }
 
@@ -140,6 +145,59 @@ func (s *SimpersServiceImpl) GetPasporByNRP(nrp string) (out dto.GetPasporByNRPR
 		NRP:         paspor.NRP,
 		NomorPaspor: paspor.NomorPassport,
 	}
+
+	return
+}
+
+func (s *SimpersServiceImpl) CreateLampiran(req dto.CreateLampiranRequest, docID int, docType string) (out dto.CreateLampiranResponse, err error) {
+	var personelID int
+	switch docType {
+	case constants.DataAsabri:
+		asabri, err := s.asabriRepo.GetByID(docID)
+		if err != nil {
+			return out, err
+		}
+		if asabri.IsEmpty() {
+			return out, constants.ErrorMessageDataNotFound
+		}
+		personelID = asabri.PersonelID
+	case constants.DataPaspor:
+		paspor, err := s.pasporRepo.GetByID(docID)
+		if err != nil {
+			return out, err
+		}
+		if paspor.IsEmpty() {
+			return out, constants.ErrorMessageDataNotFound
+		}
+		personelID = paspor.PersonelID
+	case constants.DataNPWP:
+		npwp, err := s.npwpRepo.GetByID(docID)
+		if err != nil {
+			return out, err
+		}
+		if npwp.IsEmpty() {
+			return out, constants.ErrorMessageDataNotFound
+		}
+		personelID = npwp.PersonelID
+	default:
+		return out, constants.ErrorMessageCategoryNotSupported
+	}
+
+	in := model.Lampiran{
+		Kategori:   constants.Category(docType),
+		PersonelID: personelID,
+		DokumenID:  docID,
+		Link:       req.FilePath,
+		Nama:       filepath.Base(req.FilePath),
+		Keterangan: "",
+		Tipe:       filepath.Ext(filepath.Base(req.FilePath)),
+	}
+
+	id, err := s.lampiranRepo.Create(in)
+	if err != nil {
+		return out, err
+	}
+	out.ID = id
 
 	return
 }
