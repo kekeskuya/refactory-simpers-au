@@ -190,5 +190,5 @@ func (h *SimpersHandlerImpl) CreateLampiran(ctx *gin.Context) {
 		return
 	}
 
-	lib.RespondSuccess(ctx, http.StatusOK, fmt.Sprintf(lib.MsgLampiranSuccess, constants.DataPaspor), resp)
+	lib.RespondSuccess(ctx, http.StatusOK, fmt.Sprintf(lib.MsgLampiranSuccess, docType), resp)
 }
