@@ -1,19 +1,18 @@
 package service
 
 import (
-	"dummy-simpers-au/config"
-	"dummy-simpers-au/constants"
-	"dummy-simpers-au/internal/dto"
-	"dummy-simpers-au/internal/model"
-	"dummy-simpers-au/internal/repository"
+	"database/sql"
 	"path/filepath"
-
-	"github.com/jackc/pgx/v5/pgxpool"
+	"refactory-simpers-au/config"
+	"refactory-simpers-au/constants"
+	"refactory-simpers-au/internal/dto"
+	"refactory-simpers-au/internal/model"
+	"refactory-simpers-au/internal/repository"
 )
 
 type SimpersServiceImpl struct {
 	env          *config.EnvironmentVariable
-	db           *pgxpool.Pool
+	db           *sql.DB
 	personelRepo repository.PersonelRepository
 	npwpRepo     repository.NPWPRepository
 	asabriRepo   repository.AsabriRepository
@@ -23,7 +22,7 @@ type SimpersServiceImpl struct {
 
 func NewSimpersService(
 	env *config.EnvironmentVariable,
-	db *pgxpool.Pool,
+	db *sql.DB,
 	personelRepo repository.PersonelRepository,
 	npwpRepo repository.NPWPRepository,
 	asabriRepo repository.AsabriRepository,

@@ -1,9 +1,9 @@
 package api
 
 import (
-	"dummy-simpers-au/config"
-	"dummy-simpers-au/database"
-	"dummy-simpers-au/internal/service"
+	"refactory-simpers-au/config"
+	"refactory-simpers-au/database"
+	"refactory-simpers-au/internal/service"
 )
 
 type Services struct {
@@ -15,7 +15,7 @@ func NewServices(
 	r Repositories,
 	db *database.WrapDB,
 ) Services {
-	simpersService := service.NewSimpersService(env, db.Postgres.Conn, r.PersonelRepository, r.NPWPRepository, r.AsabriRepository, r.PasporRepository, r.LampiranRepository)
+	simpersService := service.NewSimpersService(env, db.SQLserver.Conn, r.PersonelRepository, r.NPWPRepository, r.AsabriRepository, r.PasporRepository, r.LampiranRepository)
 	return Services{
 		SimpersService: simpersService,
 	}

@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"dummy-simpers-au/config"
 	"fmt"
 	"net/http"
+	"refactory-simpers-au/config"
 
 	"github.com/gin-gonic/gin"
 	"go.opentelemetry.io/otel/attribute"

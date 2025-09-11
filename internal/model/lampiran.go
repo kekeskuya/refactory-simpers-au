@@ -1,7 +1,7 @@
 package model
 
 import (
-	"dummy-simpers-au/constants"
+	"refactory-simpers-au/constants"
 	"time"
 )
 

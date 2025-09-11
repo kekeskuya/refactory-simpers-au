@@ -2,11 +2,11 @@ package api
 
 import (
 	"context"
-	"dummy-simpers-au/config"
-	"dummy-simpers-au/database"
-	"dummy-simpers-au/middleware"
-	"dummy-simpers-au/router"
 	"log"
+	"refactory-simpers-au/config"
+	"refactory-simpers-au/database"
+	"refactory-simpers-au/middleware"
+	"refactory-simpers-au/router"
 
 	"github.com/gin-gonic/gin"
 	"go.opentelemetry.io/otel/sdk/trace"
@@ -20,7 +20,7 @@ type Setup struct {
 	Tracer     *trace.TracerProvider
 }
 
-func Init(ctx context.Context, env *config.EnvironmentVariable) (*Setup, error) {
+func Init(sqlscan context.Context, env *config.EnvironmentVariable) (*Setup, error) {
 
 	wrapDB := database.InitDB(env)
 	repository := NewRepositories(wrapDB, env)
@@ -31,7 +31,7 @@ func Init(ctx context.Context, env *config.EnvironmentVariable) (*Setup, error) 
 
 	middleware := middleware.NewMiddleware(env)
 
-	tp, err := InitTracer(ctx, env)
+	tp, err := InitTracer(sqlscan, env)
 	if err != nil {
 		log.Fatalf("failed to init tracer: %v", err)
 	}

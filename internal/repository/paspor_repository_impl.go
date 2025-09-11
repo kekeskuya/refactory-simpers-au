@@ -2,14 +2,12 @@ package repository
 
 import (
 	"context" // Import the initializers package
-	"dummy-simpers-au/config"
-	"dummy-simpers-au/database"
-	"dummy-simpers-au/internal/entity"
-	"dummy-simpers-au/internal/model"
-	"errors"
+	"refactory-simpers-au/config"
+	"refactory-simpers-au/database"
+	"refactory-simpers-au/internal/entity"
+	"refactory-simpers-au/internal/model"
 
-	"github.com/georgysavva/scany/v2/pgxscan"
-	"github.com/jackc/pgx/v5"
+	"github.com/georgysavva/scany/v2/sqlscan"
 )
 
 type PasporRepoImpl struct {
@@ -31,17 +29,13 @@ func (r *PasporRepoImpl) GetByID(id int) (out entity.PasporWithNRP, err error) {
 	query := `SELECT n.id, n.created_at, n.updated_at, n.personel_id, n.nomor_passport, p.nrp 
 	FROM paspor n 
 	LEFT JOIN personel p ON p.id = n.personel_id 
-	WHERE n.id = $1`
+	WHERE n.id = @p1`
 
-	err = pgxscan.Get(ctx, r.db.Postgres.Conn, &out, query, id)
-	if errors.Is(err, pgx.ErrNoRows) {
+	err = sqlscan.Get(ctx, r.db.SQLserver.Conn, &out, query, id)
+	if sqlscan.NotFound(err) {
 		return out, nil
 	}
-	if err != nil {
-		return out, err
-	}
-
-	return out, nil
+	return out, err
 }
 
 func (r *PasporRepoImpl) GetByNRP(nrp string) (out entity.PasporWithNRP, err error) {
@@ -51,29 +45,22 @@ func (r *PasporRepoImpl) GetByNRP(nrp string) (out entity.PasporWithNRP, err err
 	query := `SELECT n.id, n.created_at, n.updated_at, n.personel_id, n.nomor_passport, p.nrp 
 	FROM paspor n 
 	LEFT JOIN personel p ON p.id = n.personel_id 
-	WHERE p.nrp = $1`
+	WHERE p.nrp = @p1`
 
-	err = pgxscan.Get(ctx, r.db.Postgres.Conn, &out, query, nrp)
-	if errors.Is(err, pgx.ErrNoRows) {
+	err = sqlscan.Get(ctx, r.db.SQLserver.Conn, &out, query, nrp)
+	if sqlscan.NotFound(err) {
 		return out, nil
 	}
-	if err != nil {
-		return out, err
-	}
-
-	return out, nil
+	return out, err
 }
 
 func (r *PasporRepoImpl) Create(in model.Paspor) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
 
-	query := `INSERT INTO paspor (personel_id, nomor_passport) VALUES ($1, $2)`
-	_, err = r.db.Postgres.Conn.Exec(ctx, query, in.PersonelID, in.NomorPassport)
-	if err != nil {
-		return err
-	}
-	return
+	query := `INSERT INTO paspor (personel_id, nomor_passport) VALUES (@p1, @p2)`
+	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, in.PersonelID, in.NomorPassport)
+	return err
 }
 
 func (r *PasporRepoImpl) GetAll() (out []model.Paspor, err error) {
@@ -82,12 +69,8 @@ func (r *PasporRepoImpl) GetAll() (out []model.Paspor, err error) {
 
 	query := `SELECT id, created_at, updated_at, personel_id, nomor_passport FROM paspor ORDER BY id DESC`
 
-	err = pgxscan.Select(ctx, r.db.Postgres.Conn, &out, query)
-	if err != nil {
-		return out, err
-	}
-
-	return out, nil
+	err = sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query)
+	return out, err
 }
 
 func (r *PasporRepoImpl) Update(in model.Paspor) (err error) {
@@ -95,24 +78,19 @@ func (r *PasporRepoImpl) Update(in model.Paspor) (err error) {
 	defer cancel()
 
 	query := `UPDATE paspor SET 
-	personel_id = $2,
-	nomor_passport = $3 
-	WHERE id=$1`
-	_, err = r.db.Postgres.Conn.Exec(ctx, query, in.ID, in.PersonelID, in.NomorPassport)
-	if err != nil {
-		return err
-	}
-	return
+	personel_id = @p2,
+	nomor_passport = @p3 
+	WHERE id=@p1`
+
+	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, in.ID, in.PersonelID, in.NomorPassport)
+	return err
 }
 
 func (r *PasporRepoImpl) DeleteByID(id int) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
 
-	query := `DELETE FROM paspor WHERE id = $1`
-	_, err = r.db.Postgres.Conn.Exec(ctx, query, id)
-	if err != nil {
-		return err
-	}
-	return
+	query := `DELETE FROM paspor WHERE id = @p1`
+	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, id)
+	return err
 }

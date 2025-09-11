@@ -1,9 +1,9 @@
 package api
 
 import (
-	"dummy-simpers-au/config"
-	"dummy-simpers-au/database"
-	"dummy-simpers-au/internal/repository"
+	"refactory-simpers-au/config"
+	"refactory-simpers-au/database"
+	"refactory-simpers-au/internal/repository"
 )
 
 type Repositories struct {

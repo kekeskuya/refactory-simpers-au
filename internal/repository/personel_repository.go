@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"dummy-simpers-au/internal/model"
+	"refactory-simpers-au/internal/model"
 )
 
 type PersonelRepository interface {

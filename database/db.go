@@ -1,18 +1,17 @@
 package database
 
 import (
-	"dummy-simpers-au/config"
-	"dummy-simpers-au/database/postgres"
+	"refactory-simpers-au/config"
+	"refactory-simpers-au/database/sqlserver"
 )
 
 type WrapDB struct {
-	Postgres *postgres.WrapDB
+	SQLserver *sqlserver.WrapDB
 }
 
 func InitDB(env *config.EnvironmentVariable) *WrapDB {
-	postgresDB := postgres.InitDatabase(env)
-
+	sqlserverDB := sqlserver.InitDatabase(env)
 	return &WrapDB{
-		Postgres: postgresDB,
+		SQLserver: sqlserverDB,
 	}
 }

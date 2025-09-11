@@ -1,8 +1,8 @@
 package lib
 
 import (
-	"dummy-simpers-au/constants"
 	"net/http"
+	"refactory-simpers-au/constants"
 
 	"github.com/gin-gonic/gin"
 )
@@ -52,7 +52,7 @@ type APIResponsePaginated struct {
 // code int for http status
 // message string for human readable
 // err for error details
-func RespondError(ctx *gin.Context, code int, message string, err error) {
+func RespondError(sqlscan *gin.Context, code int, message string, err error) {
 	switch err {
 	case constants.ErrorMessageUnauthorized:
 		code = http.StatusUnauthorized
@@ -62,26 +62,26 @@ func RespondError(ctx *gin.Context, code int, message string, err error) {
 		code = http.StatusNotFound
 	}
 
-	ctx.JSON(code, HTTPError{
+	sqlscan.JSON(code, HTTPError{
 		Success: false,
 		Message: message,
 		Error:   err,
 	})
 }
 
-func RespondSuccess(ctx *gin.Context, code int, message string, data interface{}) {
+func RespondSuccess(sqlscan *gin.Context, code int, message string, data interface{}) {
 	if data == nil {
 		data = constants.MessageSuccess
 	}
-	ctx.JSON(code, APIResponse{
+	sqlscan.JSON(code, APIResponse{
 		Success: true,
 		Message: message,
 		Data:    data,
 	})
 }
 
-func RespondSuccessPaginated(ctx *gin.Context, code int, message string, data interface{}, pagination Pagination) {
-	ctx.JSON(code, APIResponsePaginated{
+func RespondSuccessPaginated(sqlscan *gin.Context, code int, message string, data interface{}, pagination Pagination) {
+	sqlscan.JSON(code, APIResponsePaginated{
 		APIResponse: APIResponse{
 			Success: true,
 			Message: message,

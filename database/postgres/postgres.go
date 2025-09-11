@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"context"
-	"dummy-simpers-au/config"
+	"refactory-simpers-au/config"
 	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"

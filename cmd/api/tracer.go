@@ -2,8 +2,8 @@ package api
 
 import (
 	"context"
-	"dummy-simpers-au/config"
 	"log"
+	"refactory-simpers-au/config"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
@@ -12,13 +12,13 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.12.0"
 )
 
-func InitTracer(ctx context.Context, env *config.EnvironmentVariable) (*sdktrace.TracerProvider, error) {
+func InitTracer(sqlscan context.Context, env *config.EnvironmentVariable) (*sdktrace.TracerProvider, error) {
 	otel.SetErrorHandler(otel.ErrorHandlerFunc(func(err error) {
 		log.Printf("OTEL error: %v", err)
 	}))
 
 	// Create an OTLP/gRPC exporter that sends to your Collector
-	exp, err := otlptracehttp.New(ctx,
+	exp, err := otlptracehttp.New(sqlscan,
 		otlptracehttp.WithEndpoint(env.Tracer.Address), // Collector’s OTLP gRPC port
 		otlptracehttp.WithInsecure(),
 	)

@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.com/kecilin-id/tni-au/dummy-simpers-au.git
+git remote add origin https://gitlab.com/kecilin-id/tni-au/refactory-simpers-au.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.com/kecilin-id/tni-au/dummy-simpers-au/-/settings/integrations)
+- [ ] [Set up project integrations](https://gitlab.com/kecilin-id/tni-au/refactory-simpers-au/-/settings/integrations)
 
 ## Collaborate with your team
 

@@ -2,14 +2,12 @@ package repository
 
 import (
 	"context" // Import the initializers package
-	"dummy-simpers-au/config"
-	"dummy-simpers-au/database"
-	"dummy-simpers-au/internal/entity"
-	"dummy-simpers-au/internal/model"
-	"errors"
+	"refactory-simpers-au/config"
+	"refactory-simpers-au/database"
+	"refactory-simpers-au/internal/entity"
+	"refactory-simpers-au/internal/model"
 
-	"github.com/georgysavva/scany/v2/pgxscan"
-	"github.com/jackc/pgx/v5"
+	"github.com/georgysavva/scany/v2/sqlscan"
 )
 
 type NPWPRepoImpl struct {
@@ -31,17 +29,13 @@ func (r *NPWPRepoImpl) GetByID(id int) (out entity.NPWPWithNRP, err error) {
 	query := `SELECT n.id, n.created_at, n.updated_at, n.personel_id, n.npwp, p.nrp 
 	FROM npwp n 
 	LEFT JOIN personel p ON p.id = n.personel_id 
-	WHERE n.id = $1`
+	WHERE n.id = @p1`
 
-	err = pgxscan.Get(ctx, r.db.Postgres.Conn, &out, query, id)
-	if errors.Is(err, pgx.ErrNoRows) {
+	err = sqlscan.Get(ctx, r.db.SQLserver.Conn, &out, query, id)
+	if sqlscan.NotFound(err) {
 		return out, nil
 	}
-	if err != nil {
-		return out, err
-	}
-
-	return out, nil
+	return out, err
 }
 
 func (r *NPWPRepoImpl) GetByNRP(nrp string) (out entity.NPWPWithNRP, err error) {
@@ -51,29 +45,23 @@ func (r *NPWPRepoImpl) GetByNRP(nrp string) (out entity.NPWPWithNRP, err error) 
 	query := `SELECT n.id, n.created_at, n.updated_at, n.personel_id, n.npwp, p.nrp 
 	FROM npwp n 
 	LEFT JOIN personel p ON p.id = n.personel_id 
-	WHERE p.nrp = $1`
+	WHERE p.nrp = @p1`
 
-	err = pgxscan.Get(ctx, r.db.Postgres.Conn, &out, query, nrp)
-	if errors.Is(err, pgx.ErrNoRows) {
+	err = sqlscan.Get(ctx, r.db.SQLserver.Conn, &out, query, nrp)
+	if sqlscan.NotFound(err) {
 		return out, nil
 	}
-	if err != nil {
-		return out, err
-	}
-
-	return out, nil
+	return out, err
 }
 
 func (r *NPWPRepoImpl) Create(in model.NPWP) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
 
-	query := `INSERT INTO npwp (personel_id, npwp) VALUES ($1, $2)`
-	_, err = r.db.Postgres.Conn.Exec(ctx, query, in.PersonelID, in.NPWP)
-	if err != nil {
-		return err
-	}
-	return
+	query := `INSERT INTO npwp (personel_id, npwp) VALUES (@p1, @p2)`
+
+	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, in.PersonelID, in.NPWP)
+	return err
 }
 
 func (r *NPWPRepoImpl) GetAll() (out []model.NPWP, err error) {
@@ -82,12 +70,8 @@ func (r *NPWPRepoImpl) GetAll() (out []model.NPWP, err error) {
 
 	query := `SELECT id, created_at, updated_at, personel_id, npwp FROM npwp ORDER BY id DESC`
 
-	err = pgxscan.Select(ctx, r.db.Postgres.Conn, &out, query)
-	if err != nil {
-		return out, err
-	}
-
-	return out, nil
+	err = sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query)
+	return out, err
 }
 
 func (r *NPWPRepoImpl) Update(in model.NPWP) (err error) {
@@ -95,24 +79,19 @@ func (r *NPWPRepoImpl) Update(in model.NPWP) (err error) {
 	defer cancel()
 
 	query := `UPDATE npwp SET 
-	personel_id = $2,
-	npwp = $3 
-	WHERE id=$1`
-	_, err = r.db.Postgres.Conn.Exec(ctx, query, in.ID, in.PersonelID, in.NPWP)
-	if err != nil {
-		return err
-	}
-	return
+	personel_id = @p2,
+	npwp = @p3 
+	WHERE id=@p1`
+
+	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, in.ID, in.PersonelID, in.NPWP)
+	return err
 }
 
 func (r *NPWPRepoImpl) DeleteByID(id int) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
 
-	query := `DELETE FROM npwp WHERE id = $1`
-	_, err = r.db.Postgres.Conn.Exec(ctx, query, id)
-	if err != nil {
-		return err
-	}
-	return
+	query := `DELETE FROM npwp WHERE id = @p1`
+	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, id)
+	return err
 }

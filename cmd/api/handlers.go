@@ -1,8 +1,8 @@
 package api
 
 import (
-	"dummy-simpers-au/config"
-	"dummy-simpers-au/internal/handler"
+	"refactory-simpers-au/config"
+	"refactory-simpers-au/internal/handler"
 )
 
 type Handlers struct {

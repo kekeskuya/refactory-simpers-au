@@ -3,9 +3,9 @@ package handler
 import "github.com/gin-gonic/gin"
 
 type SimpersHandler interface {
-	GetPersonelByNRP(ctx *gin.Context)
-	GetNPWPByNRP(ctx *gin.Context)
-	GetAsabriByNRP(ctx *gin.Context)
-	GetPasporByNRP(ctx *gin.Context)
-	CreateLampiran(ctx *gin.Context)
+	GetPersonelByNRP(sqlscan *gin.Context)
+	GetNPWPByNRP(sqlscan *gin.Context)
+	GetAsabriByNRP(sqlscan *gin.Context)
+	GetPasporByNRP(sqlscan *gin.Context)
+	CreateLampiran(sqlscan *gin.Context)
 }

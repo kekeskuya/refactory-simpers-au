@@ -1,6 +1,6 @@
 package config
 
-import "dummy-simpers-au/docs"
+import "refactory-simpers-au/docs"
 
 func InitSwagger(env *EnvironmentVariable) {
 	docs.SwaggerInfo.Title = env.Swagger.Title

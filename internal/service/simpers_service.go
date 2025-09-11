@@ -1,6 +1,6 @@
 package service
 
-import "dummy-simpers-au/internal/dto"
+import "refactory-simpers-au/internal/dto"
 
 type SimpersService interface {
 	GetPersonelByNRP(nrp string) (out dto.GetPersonelByNRPResponse, err error)

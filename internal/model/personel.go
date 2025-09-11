@@ -3,7 +3,7 @@ package model
 import "time"
 
 type Personel struct {
-	ID              uint64     `db:"id"`
+	ID              uint64     `db:"personel_id"`
 	CreatedAt       *time.Time `db:"created_at"`
 	UpdatedAt       *time.Time `db:"updated_at"`
 	Nama            string     `db:"nama"`

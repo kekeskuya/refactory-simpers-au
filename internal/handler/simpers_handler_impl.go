@@ -1,15 +1,15 @@
 package handler
 
 import (
-	"dummy-simpers-au/config"
-	"dummy-simpers-au/constants"
-	"dummy-simpers-au/internal/dto"
-	"dummy-simpers-au/internal/service"
-	"dummy-simpers-au/lib"
-	"dummy-simpers-au/utils"
 	"errors"
 	"fmt"
 	"net/http"
+	"refactory-simpers-au/config"
+	"refactory-simpers-au/constants"
+	"refactory-simpers-au/internal/dto"
+	"refactory-simpers-au/internal/service"
+	"refactory-simpers-au/lib"
+	"refactory-simpers-au/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -40,21 +40,21 @@ func NewSimpersHandler(
 // @Failure      	400  			{object}  		lib.HTTPError
 // @Failure      	500  			{object}  		lib.HTTPError
 // @Router /personel/{nrp} [get]
-func (h *SimpersHandlerImpl) GetPersonelByNRP(ctx *gin.Context) {
-	nrp := ctx.Param("nrp")
+func (h *SimpersHandlerImpl) GetPersonelByNRP(sqlscan *gin.Context) {
+	nrp := sqlscan.Param("nrp")
 	if nrp == "" {
 		err := constants.ErrorMessageInvalidInput
-		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	resp, err := h.SimpersService.GetPersonelByNRP(nrp)
 	if err != nil {
-		lib.RespondError(ctx, http.StatusInternalServerError, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
 		return
 	}
 
-	lib.RespondSuccess(ctx, http.StatusOK, lib.MsgOk, resp)
+	lib.RespondSuccess(sqlscan, http.StatusOK, lib.MsgOk, resp)
 }
 
 // GetNPWPByNRP godoc
@@ -67,21 +67,21 @@ func (h *SimpersHandlerImpl) GetPersonelByNRP(ctx *gin.Context) {
 // @Failure      	400  			{object}  		lib.HTTPError
 // @Failure      	500  			{object}  		lib.HTTPError
 // @Router /personel/{nrp}/npwp [get]
-func (h *SimpersHandlerImpl) GetNPWPByNRP(ctx *gin.Context) {
-	nrp := ctx.Param("nrp")
+func (h *SimpersHandlerImpl) GetNPWPByNRP(sqlscan *gin.Context) {
+	nrp := sqlscan.Param("nrp")
 	if nrp == "" {
 		err := constants.ErrorMessageInvalidInput
-		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	resp, err := h.SimpersService.GetNPWPByNRP(nrp)
 	if err != nil {
-		lib.RespondError(ctx, http.StatusInternalServerError, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
 		return
 	}
 
-	lib.RespondSuccess(ctx, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, constants.DataNPWP), resp)
+	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, constants.DataNPWP), resp)
 }
 
 // GetAsabriByNRP godoc
@@ -94,21 +94,21 @@ func (h *SimpersHandlerImpl) GetNPWPByNRP(ctx *gin.Context) {
 // @Failure      	400  			{object}  		lib.HTTPError
 // @Failure      	500  			{object}  		lib.HTTPError
 // @Router /personel/{nrp}/asabri [get]
-func (h *SimpersHandlerImpl) GetAsabriByNRP(ctx *gin.Context) {
-	nrp := ctx.Param("nrp")
+func (h *SimpersHandlerImpl) GetAsabriByNRP(sqlscan *gin.Context) {
+	nrp := sqlscan.Param("nrp")
 	if nrp == "" {
 		err := constants.ErrorMessageInvalidInput
-		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	resp, err := h.SimpersService.GetAsabriByNRP(nrp)
 	if err != nil {
-		lib.RespondError(ctx, http.StatusInternalServerError, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
 		return
 	}
 
-	lib.RespondSuccess(ctx, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, constants.DataAsabri), resp)
+	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, constants.DataAsabri), resp)
 }
 
 // GetPasporByNRP godoc
@@ -121,21 +121,21 @@ func (h *SimpersHandlerImpl) GetAsabriByNRP(ctx *gin.Context) {
 // @Failure      	400  			{object}  		lib.HTTPError
 // @Failure      	500  			{object}  		lib.HTTPError
 // @Router /personel/{nrp}/paspor [get]
-func (h *SimpersHandlerImpl) GetPasporByNRP(ctx *gin.Context) {
-	nrp := ctx.Param("nrp")
+func (h *SimpersHandlerImpl) GetPasporByNRP(sqlscan *gin.Context) {
+	nrp := sqlscan.Param("nrp")
 	if nrp == "" {
 		err := constants.ErrorMessageInvalidInput
-		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	resp, err := h.SimpersService.GetPasporByNRP(nrp)
 	if err != nil {
-		lib.RespondError(ctx, http.StatusInternalServerError, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
 		return
 	}
 
-	lib.RespondSuccess(ctx, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, constants.DataPaspor), resp)
+	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, constants.DataPaspor), resp)
 }
 
 // CreateLampiran godoc
@@ -150,45 +150,46 @@ func (h *SimpersHandlerImpl) GetPasporByNRP(ctx *gin.Context) {
 // @Failure      	400  			{object}  		lib.HTTPError
 // @Failure      	500  			{object}  		lib.HTTPError
 // @Router /{tipe-dokumen}/{id-dokumen}/lampiran [post]
-func (h *SimpersHandlerImpl) CreateLampiran(ctx *gin.Context) {
-	docIdStr := ctx.Param("id-dokumen")
+
+func (h *SimpersHandlerImpl) CreateLampiran(sqlscan *gin.Context) {
+	docIdStr := sqlscan.Param("id-dokumen")
 	if docIdStr == "" {
 		err := constants.ErrorMessageInvalidInput
-		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	docID, err := strconv.Atoi(docIdStr)
 	if err != nil {
-		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
-	docType := ctx.Param("tipe-dokumen")
+	docType := sqlscan.Param("tipe-dokumen")
 	if docType == "" {
 		err := constants.ErrorMessageInvalidInput
-		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	if !utils.IsExistsInList(constants.AllowedDocType, docType) {
 		err := errors.New("category not supported")
-		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	var req dto.CreateLampiranRequest
-	err = ctx.ShouldBindJSON(&req)
+	err = sqlscan.ShouldBindJSON(&req)
 	if err != nil {
-		lib.RespondError(ctx, http.StatusBadRequest, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
 	resp, err := h.SimpersService.CreateLampiran(req, docID, docType)
 	if err != nil {
-		lib.RespondError(ctx, http.StatusInternalServerError, err.Error(), err)
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
 		return
 	}
 
-	lib.RespondSuccess(ctx, http.StatusOK, fmt.Sprintf(lib.MsgLampiranSuccess, docType), resp)
+	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgLampiranSuccess, docType), resp)
 }
