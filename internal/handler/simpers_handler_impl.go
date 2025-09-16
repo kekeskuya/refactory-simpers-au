@@ -42,6 +42,7 @@ func NewSimpersHandler(
 // @Router /personel/{nrp} [get]
 func (h *SimpersHandlerImpl) GetPersonelByNRP(sqlscan *gin.Context) {
 	nrp := sqlscan.Param("nrp")
+	fmt.Printf("DEBUG NRP: %s\n", nrp)
 	if nrp == "" {
 		err := constants.ErrorMessageInvalidInput
 		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
@@ -185,7 +186,7 @@ func (h *SimpersHandlerImpl) CreateLampiran(sqlscan *gin.Context) {
 		return
 	}
 
-	resp, err := h.SimpersService.CreateLampiran(req, docID, docType)
+	resp, err := h.SimpersService.CreateLampiran(req, strconv.Itoa(docID), docType)
 	if err != nil {
 		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
 		return

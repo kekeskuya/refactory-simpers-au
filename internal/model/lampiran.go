@@ -11,7 +11,7 @@ type Lampiran struct {
 	UpdatedAt  *time.Time         `db:"updated_at"`
 	Kategori   constants.Category `db:"kategori"`
 	PersonelID int                `db:"personel_id"`
-	DokumenID  int                `db:"dokumen_id"`
+	DokumenID  string             `db:"dokumen_id"`
 	Link       string             `db:"link"`
 	Nama       string             `db:"nama"`
 	Keterangan string             `db:"keterangan"`

@@ -22,7 +22,7 @@ func NewLampiranRepository(db *database.WrapDB, env *config.EnvironmentVariable)
 	}
 }
 
-func (r *LampiranRepoImpl) GetByID(id int) (out entity.LampiranWithNRP, err error) {
+func (r *LampiranRepoImpl) GetByID(id string) (out entity.LampiranWithNRP, err error) {
 	//sqlscan, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()

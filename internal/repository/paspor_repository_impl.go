@@ -22,7 +22,7 @@ func NewPasporRepository(db *database.WrapDB, env *config.EnvironmentVariable) P
 	}
 }
 
-func (r *PasporRepoImpl) GetByID(id int) (out entity.PasporWithNRP, err error) {
+func (r *PasporRepoImpl) GetByID(id string) (out entity.PasporWithNRP, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
 
@@ -73,18 +73,18 @@ func (r *PasporRepoImpl) GetAll() (out []model.Paspor, err error) {
 	return out, err
 }
 
-func (r *PasporRepoImpl) Update(in model.Paspor) (err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
-	defer cancel()
+// func (r *PasporRepoImpl) Update(in model.Paspor) (err error) {
+// 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
+// 	defer cancel()
 
-	query := `UPDATE paspor SET 
-	personel_id = @p2,
-	nomor_passport = @p3 
-	WHERE id=@p1`
+// 	query := `UPDATE paspor SET
+// 	personel_id = @p2,
+// 	nomor_passport = @p3
+// 	WHERE id=@p1`
 
-	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, in.ID, in.PersonelID, in.NomorPassport)
-	return err
-}
+// 	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, in.ID, in.PersonelID, in.NomorPassport)
+// 	return err
+// }
 
 func (r *PasporRepoImpl) DeleteByID(id int) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)

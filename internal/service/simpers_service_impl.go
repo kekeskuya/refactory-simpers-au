@@ -50,39 +50,39 @@ func (s *SimpersServiceImpl) GetPersonelByNRP(nrp string) (out dto.GetPersonelBy
 		return out, constants.ErrorMessageDataNotFound
 	}
 
-	var (
-		tanggalLahir string
-		tmtMasuk     string
-		tmtPerwira   string
-	)
+	// var (
+	// 	tanggalLahir string
+	// 	tmtMasuk     string
+	// 	tmtPerwira   string
+	// )
 
-	if personel.TanggalLahir != nil {
-		tanggalLahir = personel.TanggalLahir.Format(constants.LayoutDDMMYYYY)
-	}
+	// if personel.TanggalLahir != nil {
+	// 	tanggalLahir = personel.TanggalLahir.Format(constants.LayoutDDMMYYYY)
+	// }
 
-	if personel.TmtMasuk != nil {
-		tmtMasuk = personel.TmtMasuk.Format(constants.LayoutDDMMYYYY)
-	}
+	// if personel.TmtMasuk != nil {
+	// 	tmtMasuk = personel.TmtMasuk.Format(constants.LayoutDDMMYYYY)
+	// }
 
-	if personel.TmtPerwira != nil {
-		tmtPerwira = personel.TmtPerwira.Format(constants.LayoutDDMMYYYY)
-	}
+	// if personel.TmtPerwira != nil {
+	// 	tmtPerwira = personel.TmtPerwira.Format(constants.LayoutDDMMYYYY)
+	// }
 
 	out = dto.GetPersonelByNRPResponse{
-		ID:              int(personel.ID),
-		NRP:             personel.NRP,
-		Nama:            personel.Nama,
-		Pangkat:         personel.Pangkat,
-		Korps:           personel.Korps,
-		StatusKeaktifan: personel.StatusKeaktifan,
-		TempatLahir:     personel.TempatLahir,
-		TanggalLahir:    tanggalLahir,
-		Jabatan:         personel.Jabatan,
-		Profesi:         personel.Profesi,
-		Spesialisasi:    personel.Spesialisasi,
-		SatuanKerja:     personel.Kesatuan,
-		TmtMasuk:        tmtMasuk,
-		TmtPerwira:      tmtPerwira,
+		PersonelID: int(personel.PersonelID),
+		// NRP:               personel.NRP,
+		PersonelNama: personel.PersonelNama,
+		// Pangkat:           personel.Pangkat,
+		// Korps:             personel.Korps,
+		// StatusPersonel_Id: personel.StatusPersonel_Id,
+		// TempatLahir:       personel.TempatLahir,
+		// TanggalLahir:      tanggalLahir,
+		// Jabatan:           personel.Jabatan,
+		// Profesi:           personel.Profesi,
+		// Spesialisasi:      personel.Spesialisasi,
+		// SatuanKerja:       personel.Kesatuan,
+		// TmtMasuk:          tmtMasuk,
+		// TmtPerwira:        tmtPerwira,
 	}
 
 	return
@@ -100,9 +100,8 @@ func (s *SimpersServiceImpl) GetNPWPByNRP(nrp string) (out dto.GetNPWPByNRPRespo
 	}
 
 	out = dto.GetNPWPByNRPResponse{
-		ID:   int(npwp.ID),
-		NRP:  npwp.NRP,
-		NPWP: npwp.NPWP,
+		PersonelID: int(npwp.PersonelID),
+		NPWP:       npwp.NPWP,
 	}
 
 	return
@@ -120,9 +119,8 @@ func (s *SimpersServiceImpl) GetAsabriByNRP(nrp string) (out dto.GetAsabriByNRPR
 	}
 
 	out = dto.GetAsabriByNRPResponse{
-		ID:     int(asabri.ID),
-		NRP:    asabri.NRP,
-		Asabri: asabri.NomorAsabri,
+		PersonelID: int(asabri.PersonelID),
+		Asabri:     asabri.NomorAsabri,
 	}
 
 	return
@@ -140,15 +138,14 @@ func (s *SimpersServiceImpl) GetPasporByNRP(nrp string) (out dto.GetPasporByNRPR
 	}
 
 	out = dto.GetPasporByNRPResponse{
-		ID:          int(paspor.ID),
-		NRP:         paspor.NRP,
+		PersonelID:  int(paspor.PersonelID),
 		NomorPaspor: paspor.NomorPassport,
 	}
 
 	return
 }
 
-func (s *SimpersServiceImpl) CreateLampiran(req dto.CreateLampiranRequest, docID int, docType string) (out dto.CreateLampiranResponse, err error) {
+func (s *SimpersServiceImpl) CreateLampiran(req dto.CreateLampiranRequest, docID string, docType string) (out dto.CreateLampiranResponse, err error) {
 	var personelID int
 	switch docType {
 	case constants.DataAsabri:
@@ -196,7 +193,7 @@ func (s *SimpersServiceImpl) CreateLampiran(req dto.CreateLampiranRequest, docID
 	if err != nil {
 		return out, err
 	}
-	out.ID = id
+	out.PersonelID = id
 
 	return
 }

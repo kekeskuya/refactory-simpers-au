@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"os"
 	"time"
 
 	"refactory-simpers-au/config"
@@ -18,11 +17,11 @@ type WrapDB struct {
 }
 
 func buildDSN(env *config.EnvironmentVariable) string {
-	host := os.Getenv("SQLSERVER_HOST")
-	port := os.Getenv("SQLSERVER_PORT")
-	user := os.Getenv("SQLSERVER_USER")
-	pass := os.Getenv("SQLSERVER_PASSWORD")
-	name := os.Getenv("SQLSERVER_DB")
+	host := env.DB.SQLSERVER.Host
+	port := env.DB.SQLSERVER.Port
+	user := env.DB.SQLSERVER.Username
+	pass := env.DB.SQLSERVER.Password
+	name := env.DB.SQLSERVER.Name
 
 	if port == "" {
 		port = "1433"

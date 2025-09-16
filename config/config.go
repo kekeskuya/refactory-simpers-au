@@ -43,13 +43,14 @@ type EnvironmentVariable struct {
 		Mode string `mapstructure:"MODE"`
 	} `mapstructure:"APP"`
 	DB struct {
-		Timeout  time.Duration `mapstructure:"TIMEOUT"`
-		Postgres struct {
+		Timeout   time.Duration `mapstructure:"TIMEOUT"`
+		SQLSERVER struct {
 			Host     string `mapstructure:"HOST"`
 			Username string `mapstructure:"USERNAME"`
 			Password string `mapstructure:"PASSWORD"`
 			Name     string `mapstructure:"NAME"`
-		} `mapstructure:"POSTGRES"`
+			Port     string `mapstructure:"PORT"`
+		} `mapstructure:"SQLSERVER"`
 	} `mapstructure:"DB"`
 	Swagger struct {
 		BasePath    string `mapstructure:"BASE_PATH"`

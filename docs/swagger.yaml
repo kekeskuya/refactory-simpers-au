@@ -71,7 +71,7 @@ definitions:
       spesialisasi:
         example: Simulator
         type: string
-      status_keaktifan:
+      StatusPersonel_Id:
         example: true
         type: boolean
       tanggal_lahir:

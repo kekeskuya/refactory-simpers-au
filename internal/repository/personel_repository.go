@@ -5,10 +5,10 @@ import (
 )
 
 type PersonelRepository interface {
-	GetByID(id int) (out model.Personel, err error)
+	GetByID(id string) (out model.Personel, err error)
 	GetByNRP(nrp string) (out model.Personel, err error)
-	Create(in model.Personel) (err error)
-	GetAll() (out []model.Personel, err error)
-	Update(in model.Personel) (err error)
-	DeleteByID(id int) (err error)
+	//	Create(in model.Personel) (err error)
+	//	GetAll() (out []model.Personel, err error)
+	//	Update(in model.Personel) (err error)
+	//	DeleteByID(id int) (err error)
 }

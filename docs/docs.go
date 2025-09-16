@@ -414,7 +414,7 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Simulator"
                 },
-                "status_keaktifan": {
+                "StatusPersonel_Id": {
                     "type": "boolean",
                     "example": true
                 },

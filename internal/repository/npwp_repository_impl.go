@@ -22,7 +22,7 @@ func NewNPWPRepository(db *database.WrapDB, env *config.EnvironmentVariable) NPW
 	}
 }
 
-func (r *NPWPRepoImpl) GetByID(id int) (out entity.NPWPWithNRP, err error) {
+func (r *NPWPRepoImpl) GetByID(id string) (out entity.NPWPWithNRP, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
 
@@ -78,12 +78,11 @@ func (r *NPWPRepoImpl) Update(in model.NPWP) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
 
-	query := `UPDATE npwp SET 
-	personel_id = @p2,
+	query := `UPDATE personel SET 
 	npwp = @p3 
-	WHERE id=@p1`
+	WHERE personel_id=@p1`
 
-	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, in.ID, in.PersonelID, in.NPWP)
+	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, in.PersonelID, in.NPWP)
 	return err
 }
 

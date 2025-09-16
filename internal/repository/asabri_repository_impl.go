@@ -22,7 +22,7 @@ func NewAsabriRepository(db *database.WrapDB, env *config.EnvironmentVariable) A
 	}
 }
 
-func (r *AsabriRepoImpl) GetByID(id int) (out entity.AsabriWithNRP, err error) {
+func (r *AsabriRepoImpl) GetByID(id string) (out entity.AsabriWithNRP, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
 
@@ -78,11 +78,10 @@ func (r *AsabriRepoImpl) Update(in model.Asabri) (err error) {
 	defer cancel()
 
 	query := `UPDATE asabri
-			  SET personel_id = @p2,
-			      nomor_asabri = @p3
+			  SET nomor_asabri = @p3
 			  WHERE id = @p1`
 
-	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, in.ID, in.PersonelID, in.NomorAsabri)
+	_, err = r.db.SQLserver.Conn.ExecContext(ctx, query, in.PersonelID, in.NomorAsabri)
 	return err
 }
 

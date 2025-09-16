@@ -20,7 +20,7 @@ CREATE TABLE "personel" (
   "tanggal_lahir" date,
   "kesatuan" varchar,
   "jabatan" varchar,
-  "status_keaktifan" boolean   default false,
+  "StatusPersonel_Id" boolean   default false,
   "created_at" timestamp DEFAULT CURRENT_TIMESTAMP,
   "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP
 );
