@@ -23,6 +23,15 @@ func buildDSN(env *config.EnvironmentVariable) string {
 	pass := env.DB.SQLSERVER.Password
 	name := env.DB.SQLSERVER.Name
 
+	// Debugging output
+	fmt.Println("DEBUG USER:", user)
+	fmt.Println("DEBUG PASS:", pass)
+	fmt.Println("DEBUG HOST:", host)
+	fmt.Println("DEBUG PORT:", port)
+	fmt.Println("DEBUG NAME:", name)
+
+	fmt.Println("DEBUG HOST:", host)
+
 	if port == "" {
 		port = "1433"
 	}

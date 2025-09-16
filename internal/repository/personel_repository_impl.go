@@ -30,20 +30,6 @@ func (r *PersonelRepoImpl) GetByID(id string) (out model.Personel, err error) {
 	// query := `SELECT id, created_at, updated_at, nama, nrp, tmt_masuk, tmt_perwira, pangkat, korps, profesi, spesialisasi, tempat_lahir, tanggal_lahir, kesatuan, jabatan, StatusPersonel_Id FROM personel WHERE personel_id = @p1`
 	query := `SELECT Personel_Nama, personel_id, StatusPersonel_Id FROM personel WHERE personel_id = '@p1' `
 
-	// query := `SELECT personel.Personel_Id, personel.Personel_Nama,  M_Pangkat.Pangkat_Nama,  M_Korps.Korps_Nama, M_Profesi.Profesi_Nama, ` +
-	// 	`M_LembagaPendidikan.LembagaPendidikan_Nama, FORMAT(R_Pendidikan.Pendidikan_TMT,'dd-MM-yyyy'), FORMAT(personel.Personel_TanggalLahir,'dd-MM-yyyy'), M_Jabatan.Jabatan_Nama_Panjang as jabatan ` +
-	// 	`FROM personel ` +
-	// 	`LEFT JOIN R_Pangkat on R_Pangkat.Personel_Id = Personel.Personel_Id and R_Pangkat.Pangkat_Status = '1' ` +
-	// 	`left join M_Pangkat on M_Pangkat.Pangkat_Id = R_Pangkat.Pangkat_Id ` +
-	// 	`left join R_Korps on R_Korps.Personel_Id = Personel.Personel_Id and R_Korps.Korps_Status = '1' ` +
-	// 	`left join M_Korps on M_Korps.Korps_Id = R_Korps.Korps_Id ` +
-	// 	`LEFT JOIN M_Profesi on M_profesi.Profesi_Id = personel.Profesi_Id ` +
-	// 	`left join R_Pendidikan on R_Pendidikan.Personel_Id = personel.Personel_Id ` +
-	// 	`LEFT JOIN M_LembagaPendidikan on M_LembagaPendidikan.LembagaPendidikan_Id = R_Pendidikan.LembagaPendidikan_Id ` +
-	// 	`left join R_Jabatan on R_Jabatan.Personel_Id = personel.Personel_Id and R_Jabatan.R_Jabatan_Status = '1' ` +
-	// 	`left JOIN M_Jabatan on M_Jabatan.Jabatan_Id = R_Jabatan.Jabatan_Id ` +
-	// 	`where personel.personel_id = '21718912546621' and M_LembagaPendidikan.PendidikanAsalMasuk = '1' ` +
-	// 	`order by M_pangkat.Pangkat_Id desc`
 	fmt.Println("DEBUG QUERY 1:", query)
 	err = sqlscan.Get(ctx, r.db.SQLserver.Conn, &out, query, id)
 	if sqlscan.NotFound(err) {
@@ -71,9 +57,41 @@ func (r *PersonelRepoImpl) GetByNRP(personel_id string) (out model.Personel, err
 
 	personel_id = strings.TrimSpace(personel_id)
 
-	query := `SELECT Personel_Nama, personel_id, StatusPersonel_Id
-              FROM personel
-              WHERE personel_id = @p1`
+	// query := "SELECT personel.Personel_Id, personel.Personel_Nama,  M_Pangkat.Pangkat_Nama,  M_Korps.Korps_Nama, M_Profesi.Profesi_Nama, " +
+	// 	"M_LembagaPendidikan.LembagaPendidikan_Nama, FORMAT(R_Pendidikan.Pendidikan_TMT,'dd-MM-yyyy'), FORMAT(personel.Personel_TanggalLahir,'dd-MM-yyyy'), M_Jabatan.Jabatan_Nama_Panjang " +
+	// 	"FROM personel " +
+	// 	"LEFT JOIN R_Pangkat on R_Pangkat.Personel_Id = Personel.Personel_Id and R_Pangkat.Pangkat_Status = '1' " +
+	// 	"left join M_Pangkat on M_Pangkat.Pangkat_Id = R_Pangkat.Pangkat_Id " +
+	// 	"left join R_Korps on R_Korps.Personel_Id = Personel.Personel_Id and R_Korps.Korps_Status = '1' " +
+	// 	"left join M_Korps on M_Korps.Korps_Id = R_Korps.Korps_Id " +
+	// 	"LEFT JOIN M_Profesi on M_profesi.Profesi_Id = personel.Profesi_Id " +
+	// 	"left join R_Pendidikan on R_Pendidikan.Personel_Id = personel.Personel_Id " +
+	// 	"LEFT JOIN M_LembagaPendidikan on M_LembagaPendidikan.LembagaPendidikan_Id = R_Pendidikan.LembagaPendidikan_Id " +
+	// 	"left join R_Jabatan on R_Jabatan.Personel_Id = personel.Personel_Id and R_Jabatan.R_Jabatan_Status = '1' " +
+	// 	"left JOIN M_Jabatan on M_Jabatan.Jabatan_Id = R_Jabatan.Jabatan_Id " +
+	// 	"where personel.personel_id = '21718912546621' and M_LembagaPendidikan.PendidikanAsalMasuk = '1' " +
+	// 	"order by M_pangkat.Pangkat_Id desc"
+
+	// query := `SELECT personel.Personel_Nama, personel.personel_id, personel.StatusPersonel_Id, M_Pangkat.Pangkat_Nama , R_Pangkat.Pangkat_Id
+	//           FROM personel
+	// 		  LEFT JOIN R_Pangkat on R_Pangkat.Personel_Id = Personel.Personel_Id and R_Pangkat.Pangkat_Status = '1'
+	// 		  LEFT JOIN M_Pangkat on M_Pangkat.Pangkat_Id = R_Pangkat.Pangkat_Id
+	//           WHERE personel.personel_id = @p1
+	// 		  ORDER BY M_Pangkat.Pangkat_Id DESC`
+
+	query := `SELECT 
+        Personel_Id        AS personel_id,
+        Personel_Nama      AS personel_nama,
+        Pangkat_Nama       AS pangkat_nama,
+        Pangkat_Id         AS pangkat_id,
+        StatusPersonel_Id  AS statuspersonel_id,
+		Korps_Nama        AS korps_nama,
+		Korps_Id          AS korps_id,
+		Profesi_Nama      AS profesi_nama,
+		Profesi_Id        AS profesi_id,
+		Jabatan_Nama_Panjang AS jabatan_nama_panjang
+    FROM V_personel_twp
+    WHERE Personel_Id = @p1`
 
 	fmt.Println("DEBUG QUERY 2:", query, " NRP:", personel_id)
 

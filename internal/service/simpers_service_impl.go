@@ -42,6 +42,7 @@ func NewSimpersService(
 
 func (s *SimpersServiceImpl) GetPersonelByNRP(nrp string) (out dto.GetPersonelByNRPResponse, err error) {
 	personel, err := s.personelRepo.GetByNRP(nrp)
+
 	if err != nil {
 		return out, err
 	}
@@ -55,10 +56,47 @@ func (s *SimpersServiceImpl) GetPersonelByNRP(nrp string) (out dto.GetPersonelBy
 	// 	tmtMasuk     string
 	// 	tmtPerwira   string
 	// )
+	var pangkatNama string
+	if personel.PangkatNama.Valid {
+		pangkatNama = personel.PangkatNama.String
+	} else {
+		pangkatNama = "-"
+	}
 
-	// if personel.TanggalLahir != nil {
-	// 	tanggalLahir = personel.TanggalLahir.Format(constants.LayoutDDMMYYYY)
-	// }
+	var pangkatID *int32
+	if personel.PangkatID.Valid {
+		pangkatID = &personel.PangkatID.Int32
+	} else {
+		pangkatID = nil
+	}
+
+	var korpsNama string
+	if personel.KorpsNama.Valid {
+		korpsNama = personel.KorpsNama.String
+	} else {
+		korpsNama = "-"
+	}
+
+	var korpsID *int32
+	if personel.KorpsID.Valid {
+		korpsID = &personel.KorpsID.Int32
+	} else {
+		korpsID = nil
+	}
+
+	var profesiID *int32
+	if personel.ProfesiID.Valid {
+		profesiID = &personel.ProfesiID.Int32
+	} else {
+		profesiID = nil
+	}
+
+	var JabatanNamaPanjang string
+	if personel.JabatanNamaPanjang.Valid {
+		JabatanNamaPanjang = personel.JabatanNamaPanjang.String
+	} else {
+		JabatanNamaPanjang = "-"
+	}
 
 	// if personel.TmtMasuk != nil {
 	// 	tmtMasuk = personel.TmtMasuk.Format(constants.LayoutDDMMYYYY)
@@ -69,20 +107,17 @@ func (s *SimpersServiceImpl) GetPersonelByNRP(nrp string) (out dto.GetPersonelBy
 	// }
 
 	out = dto.GetPersonelByNRPResponse{
-		PersonelID: int(personel.PersonelID),
-		// NRP:               personel.NRP,
-		PersonelNama: personel.PersonelNama,
-		// Pangkat:           personel.Pangkat,
-		// Korps:             personel.Korps,
-		// StatusPersonel_Id: personel.StatusPersonel_Id,
-		// TempatLahir:       personel.TempatLahir,
-		// TanggalLahir:      tanggalLahir,
-		// Jabatan:           personel.Jabatan,
-		// Profesi:           personel.Profesi,
-		// Spesialisasi:      personel.Spesialisasi,
-		// SatuanKerja:       personel.Kesatuan,
-		// TmtMasuk:          tmtMasuk,
-		// TmtPerwira:        tmtPerwira,
+		PersonelID:         uint64(personel.PersonelID),
+		PersonelNama:       personel.PersonelNama,
+		PangkatNama:        pangkatNama,
+		PangkatID:          pangkatID,
+		KorpsNama:          korpsNama,
+		KorpsID:            korpsID,
+		ProfesiID:          profesiID,
+		JabatanNamaPanjang: JabatanNamaPanjang,
+		// TanggalLahir: tanggalLahir,
+		// TmtMasuk:     tmtMasuk,
+		// TmtPerwira:   tmtPerwira,
 	}
 
 	return
