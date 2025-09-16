@@ -6,6 +6,7 @@ import (
 	"refactory-simpers-au/config"
 	"refactory-simpers-au/database"
 	"refactory-simpers-au/internal/model"
+	"strings"
 
 	"github.com/georgysavva/scany/v2/sqlscan"
 )
@@ -64,17 +65,19 @@ func (r *PersonelRepoImpl) GetByID(id string) (out model.Personel, err error) {
 // 	return out, err
 // }
 
-func (r *PersonelRepoImpl) GetByNRP(nrp string) (out model.Personel, err error) {
+func (r *PersonelRepoImpl) GetByNRP(personel_id string) (out model.Personel, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
+
+	personel_id = strings.TrimSpace(personel_id)
 
 	query := `SELECT Personel_Nama, personel_id, StatusPersonel_Id
               FROM personel
               WHERE personel_id = @p1`
 
-	fmt.Println("DEBUG QUERY 2:", query)
+	fmt.Println("DEBUG QUERY 2:", query, " NRP:", personel_id)
 
-	err = sqlscan.Get(ctx, r.db.SQLserver.Conn, &out, query, nrp)
+	err = sqlscan.Get(ctx, r.db.SQLserver.Conn, &out, query, personel_id)
 	if sqlscan.NotFound(err) {
 		return out, nil
 	}
