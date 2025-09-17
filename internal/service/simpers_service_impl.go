@@ -203,87 +203,6 @@ func (s *SimpersServiceImpl) GetPersonelByNRP(nrp string) (out dto.GetPersonelBy
 	return
 }
 
-// func (s *SimpersServiceImpl) GetFamilyCardByNRP(nrp string) ([]dto.GetFamilyCardByNRPResponse, error) {
-// 	familyCard, err := s.personelRepo.GetFamilyCardByNRP(nrp)
-
-// 	if err != nil {
-// 		return out, err
-// 	}
-// 	if familyCard.IsEmpty() {
-// 		return out, constants.ErrorMessageDataNotFound
-// 	}
-
-// 	var NamaKeluarga string
-// 	if familyCard.NamaKeluarga.Valid {
-// 		NamaKeluarga = familyCard.NamaKeluarga.String
-// 	} else {
-// 		NamaKeluarga = "-"
-// 	}
-
-// 	var AlamatKeluarga string
-// 	if familyCard.AlamatKeluarga.Valid {
-// 		AlamatKeluarga = familyCard.AlamatKeluarga.String
-// 	} else {
-// 		AlamatKeluarga = "-"
-// 	}
-
-// 	var TempatLahirKeluarga string
-// 	if familyCard.TempatLahirKeluarga.Valid {
-// 		TempatLahirKeluarga = familyCard.TempatLahirKeluarga.String
-// 	} else {
-// 		TempatLahirKeluarga = "-"
-// 	}
-
-// 	var TanggalLahirKeluarga string
-// 	if familyCard.TanggalLahirKeluarga.Valid {
-// 		TanggalLahirKeluarga = familyCard.TanggalLahirKeluarga.String
-// 	} else {
-// 		TanggalLahirKeluarga = "-"
-// 	}
-
-// 	var JenisKelaminKeluarga string
-// 	if familyCard.JenisKelaminKeluarga.Valid {
-// 		JenisKelaminKeluarga = familyCard.JenisKelaminKeluarga.String
-// 	} else {
-// 		JenisKelaminKeluarga = "-"
-// 	}
-
-// 	var StatusNikahKeluarga string
-// 	if familyCard.StatusNikahKeluarga.Valid {
-// 		StatusNikahKeluarga = familyCard.StatusNikahKeluarga.String
-// 	} else {
-// 		StatusNikahKeluarga = "-"
-// 	}
-
-// 	var PekerjaanKeluarga string
-// 	if familyCard.PekerjaanKeluarga.Valid {
-// 		PekerjaanKeluarga = familyCard.PekerjaanKeluarga.String
-// 	} else {
-// 		PekerjaanKeluarga = "-"
-// 	}
-
-// 	var HubunganKeluarga string
-// 	if familyCard.HubunganKeluarga.Valid {
-// 		HubunganKeluarga = familyCard.HubunganKeluarga.String
-// 	} else {
-// 		HubunganKeluarga = "-"
-// 	}
-
-// 	out = dto.GetFamilyCardByNRPResponse{
-// 		PersonelID:           familyCard.PersonelID,
-// 		NamaKeluarga:         NamaKeluarga,
-// 		AlamatKeluarga:       AlamatKeluarga,
-// 		TempatLahirKeluarga:  TempatLahirKeluarga,
-// 		TanggalLahirKeluarga: TanggalLahirKeluarga,
-// 		JenisKelaminKeluarga: JenisKelaminKeluarga,
-// 		StatusNikahKeluarga:  StatusNikahKeluarga,
-// 		PekerjaanKeluarga:    PekerjaanKeluarga,
-// 		HubunganKeluarga:     HubunganKeluarga,
-// 	}
-
-// 	return
-// }
-
 func (s *SimpersServiceImpl) GetFamilyCardByNRP(nrp string) ([]dto.GetFamilyCardByNRPResponse, error) {
 	familyCards, err := s.personelRepo.GetFamilyCardByNRP(nrp)
 	if err != nil {
@@ -305,6 +224,56 @@ func (s *SimpersServiceImpl) GetFamilyCardByNRP(nrp string) ([]dto.GetFamilyCard
 			StatusNikahKeluarga:  nullableToString(fc.StatusNikahKeluarga, "-"),
 			PekerjaanKeluarga:    nullableToString(fc.PekerjaanKeluarga, "-"),
 			HubunganKeluarga:     nullableToString(fc.HubunganKeluarga, "-"),
+		}
+		out = append(out, resp)
+	}
+
+	return out, nil
+}
+
+func (s *SimpersServiceImpl) GetDikMilByNRP(nrp string) ([]dto.GetDikMilByNRPResponse, error) {
+	dikMils, err := s.personelRepo.GetDikMilByNRP(nrp)
+	if err != nil {
+		return nil, err
+	}
+	if len(dikMils) == 0 {
+		return nil, constants.ErrorMessageDataNotFound
+	}
+	out := make([]dto.GetDikMilByNRPResponse, 0, len(dikMils))
+	for _, dm := range dikMils {
+		resp := dto.GetDikMilByNRPResponse{
+			PersonelID:          dm.PersonelID,
+			RPendidikanId:       dm.RPendidikanId,
+			JenisPendidikanNama: nullableToString(dm.JenisPendidikanNama, "-"),
+			SekolahNama:         nullableToString(dm.SekolahNama, "-"),
+			TahunLulus:          nullableToString(dm.TahunLulus, "-"),
+			Gelar:               nullableToString(dm.Gelar, "-"),
+			// Add other fields as necessary
+		}
+		out = append(out, resp)
+	}
+
+	return out, nil
+}
+
+func (s *SimpersServiceImpl) GetDikUmByNRP(nrp string) ([]dto.GetDikUmByNRPResponse, error) {
+	dikUms, err := s.personelRepo.GetDikUmByNRP(nrp)
+	if err != nil {
+		return nil, err
+	}
+	if len(dikUms) == 0 {
+		return nil, constants.ErrorMessageDataNotFound
+	}
+	out := make([]dto.GetDikUmByNRPResponse, 0, len(dikUms))
+	for _, du := range dikUms {
+		resp := dto.GetDikUmByNRPResponse{
+			PersonelID:          du.PersonelID,
+			RPendidikanId:       du.RPendidikanId,
+			JenisPendidikanNama: nullableToString(du.JenisPendidikanNama, "-"),
+			SekolahNama:         nullableToString(du.SekolahNama, "-"),
+			TahunLulus:          nullableToString(du.TahunLulus, "-"),
+			Gelar:               nullableToString(du.Gelar, "-"),
+			// Add other fields as necessary
 		}
 		out = append(out, resp)
 	}

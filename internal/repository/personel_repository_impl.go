@@ -142,6 +142,52 @@ func (r *PersonelRepoImpl) GetFamilyCardByNRP(nrp string) ([]model.FamilyCard, e
 	return out, err
 }
 
+func (r *PersonelRepoImpl) GetDikMilByNRP(nrp string) ([]model.DikMil, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
+	defer cancel()
+	var out []model.DikMil
+	query := `
+		SELECT
+			M_JenisPendidikan.JenisPendidikan_Nama,R_Pendidikan.Sekolah_Nama,R_Pendidikan.LembagaPendidikan_Nama
+		  , R_Pendidikan.SuratKeputusan, R_Pendidikan.SuratKeputusan_Tgl, R_Pendidikan.Pendidikan_TMT
+		  , R_Pendidikan.Tahun_Masuk, R_Pendidikan.Tahun_Lulus, R_Pendidikan.Gelar
+		FROM R_Pendidikan
+		LEFT JOIN M_LembagaPendidikan on M_LembagaPendidikan.LembagaPendidikan_Id = R_Pendidikan.LembagaPendidikan_Id 
+	    LEFT JOIN M_JenisPendidikan on M_JenisPendidikan.JenisPendidikan_Id = M_LembagaPendidikan.JenisPendidikan_Id
+		WHERE M_JenisPendidikan.JenisPendidikan_Tipe = 'M'
+		  AND Personel_Id = @p1
+	`
+
+	err := sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, nrp)
+	if sqlscan.NotFound(err) {
+		return []model.DikMil{}, nil
+	}
+	return out, err
+}
+
+func (r *PersonelRepoImpl) GetDikUmByNRP(nrp string) ([]model.DikUm, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
+	defer cancel()
+	var out []model.DikUm
+	query := `
+		SELECT
+			M_JenisPendidikan.JenisPendidikan_Nama,R_Pendidikan.Sekolah_Nama,R_Pendidikan.LembagaPendidikan_Nama
+		  , R_Pendidikan.SuratKeputusan, R_Pendidikan.SuratKeputusan_Tgl, R_Pendidikan.Pendidikan_TMT
+		  , R_Pendidikan.Tahun_Masuk, R_Pendidikan.Tahun_Lulus, R_Pendidikan.Gelar
+		FROM R_Pendidikan
+		LEFT JOIN M_LembagaPendidikan on M_LembagaPendidikan.LembagaPendidikan_Id = R_Pendidikan.LembagaPendidikan_Id 
+	    LEFT JOIN M_JenisPendidikan on M_JenisPendidikan.JenisPendidikan_Id = M_LembagaPendidikan.JenisPendidikan_Id
+		WHERE M_JenisPendidikan.JenisPendidikan_Tipe = 'U'
+		  AND Personel_Id = @p1
+	`
+
+	err := sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, nrp)
+	if sqlscan.NotFound(err) {
+		return []model.DikUm{}, nil
+	}
+	return out, err
+}
+
 // func (r *PersonelRepoImpl) Create(in model.Personel) (err error) {
 // 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 // 	defer cancel()
