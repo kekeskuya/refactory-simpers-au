@@ -91,11 +91,88 @@ func (s *SimpersServiceImpl) GetPersonelByNRP(nrp string) (out dto.GetPersonelBy
 		profesiID = nil
 	}
 
+	var profesiNama string
+	if personel.ProfesiNama.Valid {
+		profesiNama = personel.ProfesiNama.String
+	} else {
+		profesiNama = "-"
+	}
+
 	var JabatanNamaPanjang string
 	if personel.JabatanNamaPanjang.Valid {
 		JabatanNamaPanjang = personel.JabatanNamaPanjang.String
 	} else {
 		JabatanNamaPanjang = "-"
+	}
+
+	var statusPersonelID *string
+	if personel.StatusPersonelID.Valid {
+		statusPersonelID = &personel.StatusPersonelID.String
+	} else {
+		statusPersonelID = nil
+	}
+
+	var nik string
+	if personel.NIK.Valid {
+		nik = personel.NIK.String
+	} else {
+		nik = "XXX"
+	}
+
+	var pendidikan_asalmasuk_id string
+	if personel.PendidikanAsalMasukID.Valid {
+		pendidikan_asalmasuk_id = personel.PendidikanAsalMasukID.String
+	} else {
+		pendidikan_asalmasuk_id = "-"
+	}
+
+	var pendidikan_asalmasuk_nama string
+	if personel.PendidikanAsalMasukNama.Valid {
+		pendidikan_asalmasuk_nama = personel.PendidikanAsalMasukNama.String
+	} else {
+		pendidikan_asalmasuk_nama = "-"
+	}
+
+	var pendidikan_militer_id string
+	if personel.PendidikanMiliterID.Valid {
+		pendidikan_militer_id = personel.PendidikanMiliterID.String
+	} else {
+		pendidikan_militer_id = "-"
+	}
+
+	var pendidikan_militer_nama string
+	if personel.PendidikanMiliterNama.Valid {
+		pendidikan_militer_nama = personel.PendidikanMiliterNama.String
+	} else {
+		pendidikan_militer_nama = "-"
+	}
+
+	var pendidikan_umum_id string
+	if personel.PendidikanUmumID.Valid {
+		pendidikan_umum_id = personel.PendidikanUmumID.String
+	} else {
+		pendidikan_umum_id = "-"
+	}
+
+	var pendidikan_umum_nama string
+	if personel.PendidikanUmumNama.Valid {
+		pendidikan_umum_nama = personel.PendidikanUmumNama.String
+	} else {
+		pendidikan_umum_nama = "-"
+	}
+
+	var satuan_kerja_id string
+	if personel.SatuanKerjaID.Valid {
+		satuan_kerja_id = personel.SatuanKerjaID.String
+	} else {
+		satuan_kerja_id = "-"
+	}
+
+	var satuan_kerja_nama string
+	if personel.SatuanKerjaNama.Valid {
+		satuan_kerja_nama = personel.SatuanKerjaNama.String
+	} else {
+		satuan_kerja_nama = "-"
 	}
 
 	// if personel.TmtMasuk != nil {
@@ -107,17 +184,25 @@ func (s *SimpersServiceImpl) GetPersonelByNRP(nrp string) (out dto.GetPersonelBy
 	// }
 
 	out = dto.GetPersonelByNRPResponse{
-		PersonelID:         uint64(personel.PersonelID),
-		PersonelNama:       personel.PersonelNama,
-		PangkatNama:        pangkatNama,
-		PangkatID:          pangkatID,
-		KorpsNama:          korpsNama,
-		KorpsID:            korpsID,
-		ProfesiID:          profesiID,
-		JabatanNamaPanjang: JabatanNamaPanjang,
-		// TanggalLahir: tanggalLahir,
-		// TmtMasuk:     tmtMasuk,
-		// TmtPerwira:   tmtPerwira,
+		PersonelID:              uint64(personel.PersonelID),
+		PersonelNama:            personel.PersonelNama,
+		PangkatNama:             pangkatNama,
+		PangkatID:               pangkatID,
+		KorpsNama:               korpsNama,
+		KorpsID:                 korpsID,
+		ProfesiID:               profesiID,
+		ProfesiNama:             profesiNama,
+		StatusPersonelID:        statusPersonelID,
+		JabatanNamaPanjang:      JabatanNamaPanjang,
+		NIK:                     nik,
+		PendidikanAsalMasukID:   pendidikan_asalmasuk_id,
+		PendidikanAsalMasukNama: pendidikan_asalmasuk_nama,
+		PendidikanMiliterID:     pendidikan_militer_id,
+		PendidikanMiliterNama:   pendidikan_militer_nama,
+		PendidikanUmumID:        pendidikan_umum_id,
+		PendidikanUmumNama:      pendidikan_umum_nama,
+		SatuanKerjaID:           satuan_kerja_id,
+		SatuanKerjaNama:         satuan_kerja_nama,
 	}
 
 	return
