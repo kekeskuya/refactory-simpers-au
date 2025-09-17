@@ -58,6 +58,21 @@ func (h *SimpersHandlerImpl) GetPersonelByNRP(sqlscan *gin.Context) {
 	lib.RespondSuccess(sqlscan, http.StatusOK, lib.MsgOk, resp)
 }
 
+func (h *SimpersHandlerImpl) GetFamilyCardByNRP(sqlscan *gin.Context) {
+	nrp := sqlscan.Param("nrp")
+	if nrp == "" {
+		err := constants.ErrorMessageInvalidInput
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+	resp, err := h.SimpersService.GetFamilyCardByNRP(nrp)
+	if err != nil {
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+		return
+	}
+	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Kartu Keluarga"), resp)
+}
+
 // GetNPWPByNRP godoc
 // @Summary Get NPWP berdasarkan NRP
 // @Tags Personel

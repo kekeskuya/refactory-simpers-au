@@ -89,6 +89,59 @@ func (r *PersonelRepoImpl) GetByNRP(personel_id string) (out model.Personel, err
 	return out, err
 }
 
+// func (r *PersonelRepoImpl) GetFamilyCardByNRP(personel_id string) (out []model.FamilyCard, err error) {
+// 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
+// 	defer cancel()
+
+// 	personel_id = strings.TrimSpace(personel_id)
+
+// 	query := `SELECT Personel_Id AS personel_id,
+// 					 nama AS nama_keluarga,
+// 					 alamat AS alamat_keluarga,
+// 					 tempat_lahir AS tempat_lahir_keluarga,
+// 					 tanggal_lahir AS tanggal_lahir_keluarga,
+// 					 jenis_kelamin AS jenis_kelamin_keluarga,
+// 					 status_nikah AS status_nikah_keluarga,
+// 					 hubungan_keluarga AS hubungan_keluarga,
+// 					 pekerjaan AS pekerjaan_keluarga
+// 			  FROM M_keluarga
+// 	          WHERE Personel_Id = @p1`
+
+// 	fmt.Println("DEBUG QUERY Family :", query, " NRP:", personel_id)
+// 	err = sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, personel_id)
+// 	if sqlscan.NotFound(err) {
+// 		return out, nil
+// 	}
+// 	return out, err
+// }
+
+func (r *PersonelRepoImpl) GetFamilyCardByNRP(nrp string) ([]model.FamilyCard, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
+	defer cancel()
+
+	var out []model.FamilyCard
+	query := `
+        SELECT 
+            Personel_Id AS personel_id,
+			nama AS nama_keluarga,
+			alamat AS alamat_keluarga,
+			tempat_lahir AS tempat_lahir_keluarga,
+			tanggal_lahir AS tanggal_lahir_keluarga,
+			jenis_kelamin AS jenis_kelamin_keluarga,
+			status_nikah AS status_nikah_keluarga,
+			hubungan_keluarga AS hubungan_keluarga,
+			pekerjaan AS pekerjaan_keluarga
+        FROM M_keluarga
+        WHERE personel_id = @p1
+    `
+
+	err := sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, nrp)
+	if sqlscan.NotFound(err) {
+		return []model.FamilyCard{}, nil
+	}
+	return out, err
+}
+
 // func (r *PersonelRepoImpl) Create(in model.Personel) (err error) {
 // 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 // 	defer cancel()

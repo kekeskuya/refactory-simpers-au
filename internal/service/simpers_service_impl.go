@@ -51,11 +51,6 @@ func (s *SimpersServiceImpl) GetPersonelByNRP(nrp string) (out dto.GetPersonelBy
 		return out, constants.ErrorMessageDataNotFound
 	}
 
-	// var (
-	// 	tanggalLahir string
-	// 	tmtMasuk     string
-	// 	tmtPerwira   string
-	// )
 	var pangkatNama string
 	if personel.PangkatNama.Valid {
 		pangkatNama = personel.PangkatNama.String
@@ -206,6 +201,122 @@ func (s *SimpersServiceImpl) GetPersonelByNRP(nrp string) (out dto.GetPersonelBy
 	}
 
 	return
+}
+
+// func (s *SimpersServiceImpl) GetFamilyCardByNRP(nrp string) ([]dto.GetFamilyCardByNRPResponse, error) {
+// 	familyCard, err := s.personelRepo.GetFamilyCardByNRP(nrp)
+
+// 	if err != nil {
+// 		return out, err
+// 	}
+// 	if familyCard.IsEmpty() {
+// 		return out, constants.ErrorMessageDataNotFound
+// 	}
+
+// 	var NamaKeluarga string
+// 	if familyCard.NamaKeluarga.Valid {
+// 		NamaKeluarga = familyCard.NamaKeluarga.String
+// 	} else {
+// 		NamaKeluarga = "-"
+// 	}
+
+// 	var AlamatKeluarga string
+// 	if familyCard.AlamatKeluarga.Valid {
+// 		AlamatKeluarga = familyCard.AlamatKeluarga.String
+// 	} else {
+// 		AlamatKeluarga = "-"
+// 	}
+
+// 	var TempatLahirKeluarga string
+// 	if familyCard.TempatLahirKeluarga.Valid {
+// 		TempatLahirKeluarga = familyCard.TempatLahirKeluarga.String
+// 	} else {
+// 		TempatLahirKeluarga = "-"
+// 	}
+
+// 	var TanggalLahirKeluarga string
+// 	if familyCard.TanggalLahirKeluarga.Valid {
+// 		TanggalLahirKeluarga = familyCard.TanggalLahirKeluarga.String
+// 	} else {
+// 		TanggalLahirKeluarga = "-"
+// 	}
+
+// 	var JenisKelaminKeluarga string
+// 	if familyCard.JenisKelaminKeluarga.Valid {
+// 		JenisKelaminKeluarga = familyCard.JenisKelaminKeluarga.String
+// 	} else {
+// 		JenisKelaminKeluarga = "-"
+// 	}
+
+// 	var StatusNikahKeluarga string
+// 	if familyCard.StatusNikahKeluarga.Valid {
+// 		StatusNikahKeluarga = familyCard.StatusNikahKeluarga.String
+// 	} else {
+// 		StatusNikahKeluarga = "-"
+// 	}
+
+// 	var PekerjaanKeluarga string
+// 	if familyCard.PekerjaanKeluarga.Valid {
+// 		PekerjaanKeluarga = familyCard.PekerjaanKeluarga.String
+// 	} else {
+// 		PekerjaanKeluarga = "-"
+// 	}
+
+// 	var HubunganKeluarga string
+// 	if familyCard.HubunganKeluarga.Valid {
+// 		HubunganKeluarga = familyCard.HubunganKeluarga.String
+// 	} else {
+// 		HubunganKeluarga = "-"
+// 	}
+
+// 	out = dto.GetFamilyCardByNRPResponse{
+// 		PersonelID:           familyCard.PersonelID,
+// 		NamaKeluarga:         NamaKeluarga,
+// 		AlamatKeluarga:       AlamatKeluarga,
+// 		TempatLahirKeluarga:  TempatLahirKeluarga,
+// 		TanggalLahirKeluarga: TanggalLahirKeluarga,
+// 		JenisKelaminKeluarga: JenisKelaminKeluarga,
+// 		StatusNikahKeluarga:  StatusNikahKeluarga,
+// 		PekerjaanKeluarga:    PekerjaanKeluarga,
+// 		HubunganKeluarga:     HubunganKeluarga,
+// 	}
+
+// 	return
+// }
+
+func (s *SimpersServiceImpl) GetFamilyCardByNRP(nrp string) ([]dto.GetFamilyCardByNRPResponse, error) {
+	familyCards, err := s.personelRepo.GetFamilyCardByNRP(nrp)
+	if err != nil {
+		return nil, err
+	}
+	if len(familyCards) == 0 {
+		return nil, constants.ErrorMessageDataNotFound
+	}
+
+	out := make([]dto.GetFamilyCardByNRPResponse, 0, len(familyCards))
+	for _, fc := range familyCards {
+		resp := dto.GetFamilyCardByNRPResponse{
+			PersonelID:           fc.PersonelID,
+			NamaKeluarga:         nullableToString(fc.NamaKeluarga, "-"),
+			AlamatKeluarga:       nullableToString(fc.AlamatKeluarga, "-"),
+			TempatLahirKeluarga:  nullableToString(fc.TempatLahirKeluarga, "-"),
+			TanggalLahirKeluarga: nullableToString(fc.TanggalLahirKeluarga, "-"),
+			JenisKelaminKeluarga: nullableToString(fc.JenisKelaminKeluarga, "-"),
+			StatusNikahKeluarga:  nullableToString(fc.StatusNikahKeluarga, "-"),
+			PekerjaanKeluarga:    nullableToString(fc.PekerjaanKeluarga, "-"),
+			HubunganKeluarga:     nullableToString(fc.HubunganKeluarga, "-"),
+		}
+		out = append(out, resp)
+	}
+
+	return out, nil
+}
+
+func nullableToString(ns sql.NullString, fallback string) string {
+	if ns.Valid {
+		return ns.String
+	}
+	return fallback
 }
 
 func (s *SimpersServiceImpl) GetNPWPByNRP(nrp string) (out dto.GetNPWPByNRPResponse, err error) {
