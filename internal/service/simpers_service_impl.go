@@ -281,6 +281,43 @@ func (s *SimpersServiceImpl) GetDikUmByNRP(nrp string) ([]dto.GetDikUmByNRPRespo
 	return out, nil
 }
 
+func (s *SimpersServiceImpl) GetJabatanByNRP(nrp string) ([]dto.GetJabatanByNRPResponse, error) {
+	jabatans, err := s.personelRepo.GetJabatanByNRP(nrp)
+	if err != nil {
+		return nil, err
+	}
+	if len(jabatans) == 0 {
+		return nil, constants.ErrorMessageDataNotFound
+	}
+
+	out := make([]dto.GetJabatanByNRPResponse, 0, len(jabatans))
+	for _, jb := range jabatans {
+		resp := dto.GetJabatanByNRPResponse{
+			PersonelID:         jb.PersonelID,
+			RJabatanId:         nullableToString(jb.RJabatanId, "-"),
+			JabatanId:          nullableToString(jb.JabatanId, "-"),
+			JabatanNama:        toStringPtr(jb.JabatanNama),
+			JabatanNamaPanjang: toStringPtr(jb.JabatanNamaPanjang),
+			SuratKeputusan:     nullableToString(jb.SuratKeputusan, "-"),
+			SuratKeputusanTgl:  nullableToString(jb.SuratKeputusanTgl, "-"),
+			JabatanTMT:         nullableToString(jb.JabatanTMT, "-"),
+			JabatanTipe:        nullableToString(jb.JabatanTipe, "-"),
+			JabatanKeterangan:  nullableToString(jb.JabatanKeterangan, "-"),
+			SprintlakTgl:       nullableToString(jb.SprintlakTgl, "-"),
+		}
+		out = append(out, resp)
+	}
+
+	return out, nil
+}
+
+func toStringPtr(ns sql.NullString) *string {
+	if ns.Valid {
+		return &ns.String
+	}
+	return nil
+}
+
 func nullableToString(ns sql.NullString, fallback string) string {
 	if ns.Valid {
 		return ns.String

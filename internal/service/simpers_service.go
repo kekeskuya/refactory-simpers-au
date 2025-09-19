@@ -7,6 +7,7 @@ type SimpersService interface {
 	GetFamilyCardByNRP(nrp string) ([]dto.GetFamilyCardByNRPResponse, error)
 	GetDikMilByNRP(nrp string) ([]dto.GetDikMilByNRPResponse, error)
 	GetDikUmByNRP(nrp string) ([]dto.GetDikUmByNRPResponse, error)
+	GetJabatanByNRP(nrp string) ([]dto.GetJabatanByNRPResponse, error)
 	GetNPWPByNRP(nrp string) (out dto.GetNPWPByNRPResponse, err error)
 	GetAsabriByNRP(nrp string) (out dto.GetAsabriByNRPResponse, err error)
 	GetPasporByNRP(nrp string) (out dto.GetPasporByNRPResponse, err error)

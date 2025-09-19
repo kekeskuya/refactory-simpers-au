@@ -103,6 +103,21 @@ func (h *SimpersHandlerImpl) GetDikUmByNRP(sqlscan *gin.Context) {
 	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Pendidikan Umum"), resp)
 }
 
+func (h *SimpersHandlerImpl) GetJabatanByNRP(sqlscan *gin.Context) {
+	nrp := sqlscan.Param("nrp")
+	if nrp == "" {
+		err := constants.ErrorMessageInvalidInput
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+	resp, err := h.SimpersService.GetJabatanByNRP(nrp)
+	if err != nil {
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+		return
+	}
+	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Jabatan"), resp)
+}
+
 // GetNPWPByNRP godoc
 // @Summary Get NPWP berdasarkan NRP
 // @Tags Personel

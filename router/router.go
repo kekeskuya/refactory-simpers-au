@@ -45,6 +45,7 @@ func NewRouter(h Handler) *gin.Engine {
 		personel.GET("/:nrp/kartu_keluarga", h.SimpersHandler.GetFamilyCardByNRP)
 		personel.GET("/:nrp/dikmil", h.SimpersHandler.GetDikMilByNRP)
 		personel.GET("/:nrp/dikum", h.SimpersHandler.GetDikUmByNRP)
+		personel.GET("/:nrp/jabatan", h.SimpersHandler.GetJabatanByNRP)
 		personel.GET("/:nrp/npwp", h.SimpersHandler.GetNPWPByNRP)
 		personel.GET("/:nrp/asabri", h.SimpersHandler.GetAsabriByNRP)
 		personel.GET("/:nrp/paspor", h.SimpersHandler.GetPasporByNRP)

@@ -188,6 +188,35 @@ func (r *PersonelRepoImpl) GetDikUmByNRP(nrp string) ([]model.DikUm, error) {
 	return out, err
 }
 
+func (r *PersonelRepoImpl) GetJabatanByNRP(nrp string) ([]model.Jabatan, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
+	defer cancel()
+	var out []model.Jabatan
+	query := `
+		select RJ.R_Jabatan_Id as r_jabatan_id
+			 , RJ.Jabatan_Id as jabatan_id
+			 , RJ.Personel_Id as personel_id
+			 , MJ.Jabatan_Nama as jabatan_nama
+			 , MJ.Jabatan_Nama_Panjang as jabatan_nama_panjang
+			 , RJ.Jabatan_TMT as jabatan_tmt
+			 , RJ.R_Jabatan_Tipe as r_jabatan_tipe
+		     , RJ.SuratKeputusan as suratkeputusan
+		     , RJ.SuratKeputusan_Tgl as suratkeputusan_tgl
+			 , RJ.R_Jabatan_Keterangan as r_jabatan_keterangan
+			 , MJ.Jabatan_Status as jabatan_status
+		from R_Jabatan RJ
+		LEFT JOIN M_Jabatan MJ on MJ.Jabatan_Id = RJ.Jabatan_Id
+		where RJ.Personel_Id = @p1
+	`
+
+	fmt.Println("DEBUG QUERY Jabatan :", query, " NRP:", nrp)
+	err := sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, nrp)
+	if sqlscan.NotFound(err) {
+		return []model.Jabatan{}, nil
+	}
+	return out, err
+}
+
 // func (r *PersonelRepoImpl) Create(in model.Personel) (err error) {
 // 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 // 	defer cancel()
