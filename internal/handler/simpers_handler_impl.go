@@ -118,6 +118,36 @@ func (h *SimpersHandlerImpl) GetJabatanByNRP(sqlscan *gin.Context) {
 	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Jabatan"), resp)
 }
 
+func (h *SimpersHandlerImpl) GetTanhorByNRP(sqlscan *gin.Context) {
+	nrp := sqlscan.Param("nrp")
+	if nrp == "" {
+		err := constants.ErrorMessageInvalidInput
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+	resp, err := h.SimpersService.GetTanhorByNRP(nrp)
+	if err != nil {
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+		return
+	}
+	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Tanda Honor"), resp)
+}
+
+func (h *SimpersHandlerImpl) GetPangkatByNRP(sqlscan *gin.Context) {
+	nrp := sqlscan.Param("nrp")
+	if nrp == "" {
+		err := constants.ErrorMessageInvalidInput
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+	resp, err := h.SimpersService.GetPangkatByNRP(nrp)
+	if err != nil {
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+		return
+	}
+	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Pangkat"), resp)
+}
+
 // GetNPWPByNRP godoc
 // @Summary Get NPWP berdasarkan NRP
 // @Tags Personel

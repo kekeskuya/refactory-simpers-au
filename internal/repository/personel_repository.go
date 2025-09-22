@@ -11,6 +11,8 @@ type PersonelRepository interface {
 	GetDikMilByNRP(nrp string) ([]model.DikMil, error)
 	GetDikUmByNRP(nrp string) ([]model.DikUm, error)
 	GetJabatanByNRP(nrp string) ([]model.Jabatan, error)
+	GetTanhorByNRP(nrp string) ([]model.Tanhor, error)
+	GetPangkatByNRP(nrp string) ([]model.Pangkat, error)
 	//	Create(in model.Personel) (err error)
 	//	GetAll() (out []model.Personel, err error)
 	//	Update(in model.Personel) (err error)

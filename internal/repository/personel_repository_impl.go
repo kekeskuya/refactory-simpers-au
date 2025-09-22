@@ -217,6 +217,56 @@ func (r *PersonelRepoImpl) GetJabatanByNRP(nrp string) ([]model.Jabatan, error) 
 	return out, err
 }
 
+func (r *PersonelRepoImpl) GetTanhorByNRP(nrp string) ([]model.Tanhor, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
+	defer cancel()
+	var out []model.Tanhor
+	query := `
+		select RJ.R_Jasa_Id as r_jasa_id
+			 , RJ.Jasa_Id as jasa_id
+			 , RJ.Personel_Id as personel_id
+			 , MJ.Jasa_Nama as jasa_nama	
+			 , RJ.Jasa_TMT as jasa_tmt
+			 , RJ.Jasa_TST as jasa_tst
+		     , RJ.SuratKeputusan as suratkeputusan
+		FROM R_Jasa RJ
+		LEFT JOIN M_Jasa MJ on MJ.Jasa_Id = RJ.Jasa_Id
+		WHERE RJ.Personel_Id = @p1
+	`
+	err := sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, nrp)
+	if sqlscan.NotFound(err) {
+		return []model.Tanhor{}, nil
+	}
+	return out, err
+}
+
+func (r *PersonelRepoImpl) GetPangkatByNRP(nrp string) ([]model.Pangkat, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
+	defer cancel()
+	var out []model.Pangkat
+	query := `
+		select RP.Personel_Id as personel_id
+			, RP.R_Pangkat_Id as r_pangkat_id
+			, RP.Pangkat_Id as pangkat_id
+			, MP.Pangkat_Nama as pangkat_nama
+			, RP.Surat_Keputusan as surat_keputusan
+			, RP.Surat_Keputusan_Tgl as surat_keputusan_tgl
+			, RP.Surat_Keputusan_Jenis as surat_keputusan_jenis
+			, RP.Pangkat_TMT as pangkat_tmt
+			, RP.Sprintlak_Tgl as sprintlak_tgl
+			, RP.Sprintlak_No as sprintlak_no
+			FROM R_Pangkat RP
+			LEFT JOIN M_Pangkat MP on MP.Pangkat_Id = RP.Pangkat_Id
+		WHERE RP.Personel_Id = @p1
+		ORDER BY RP.Pangkat_TMT DESC
+	`
+	err := sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, nrp)
+	if sqlscan.NotFound(err) {
+		return []model.Pangkat{}, nil
+	}
+	return out, err
+}
+
 // func (r *PersonelRepoImpl) Create(in model.Personel) (err error) {
 // 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 // 	defer cancel()

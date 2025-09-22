@@ -311,6 +311,61 @@ func (s *SimpersServiceImpl) GetJabatanByNRP(nrp string) ([]dto.GetJabatanByNRPR
 	return out, nil
 }
 
+func (s *SimpersServiceImpl) GetTanhorByNRP(nrp string) ([]dto.GetTanhorByNRPResponse, error) {
+	tanhors, err := s.personelRepo.GetTanhorByNRP(nrp)
+	if err != nil {
+		return nil, err
+	}
+	if len(tanhors) == 0 {
+		return nil, constants.ErrorMessageDataNotFound
+	}
+	out := make([]dto.GetTanhorByNRPResponse, 0, len(tanhors))
+	for _, th := range tanhors {
+		resp := dto.GetTanhorByNRPResponse{
+			PersonelID:        th.PersonelID,
+			RJasaId:           nullableToString(th.RJasaId, "-"),
+			JasaId:            nullableToString(th.JasaId, "-"),
+			JasaNama:          toStringPtr(th.JasaNama),
+			SuratKeputusan:    nullableToString(th.SuratKeputusan, "-"),
+			SuratKeputusanTgl: nullableToString(th.SuratKeputusanTgl, "-"),
+			JasaTMT:           nullableToString(th.JasaTMT, "-"),
+			JasaTST:           nullableToString(th.JasaTST, "-"),
+			Keterangan:        nullableToString(th.Keterangan, "-"),
+		}
+		out = append(out, resp)
+	}
+
+	return out, nil
+}
+
+func (s *SimpersServiceImpl) GetPangkatByNRP(nrp string) ([]dto.GetPangkatByNRPResponse, error) {
+	pangkats, err := s.personelRepo.GetPangkatByNRP(nrp)
+	if err != nil {
+		return nil, err
+	}
+	if len(pangkats) == 0 {
+		return nil, constants.ErrorMessageDataNotFound
+	}
+	out := make([]dto.GetPangkatByNRPResponse, 0, len(pangkats))
+	for _, pk := range pangkats {
+		resp := dto.GetPangkatByNRPResponse{
+			PersonelID:          pk.PersonelID,
+			RPangkatId:          nullableToString(pk.RPangkatId, "-"),
+			PangkatId:           nullableToString(pk.PangkatId, "-"),
+			PangkatNama:         toStringPtr(pk.PangkatNama),
+			SuratKeputusan:      nullableToString(pk.SuratKeputusan, "-"),
+			SuratKeputusanTgl:   nullableToString(pk.SuratKeputusanTgl, "-"),
+			SuratKeputusanJenis: nullableToString(pk.SuratKeputusanJenis, "-"),
+			PangkatTMT:          nullableToString(pk.PangkatTMT, "-"),
+			SprintlakTgl:        nullableToString(pk.SprintlakTgl, "-"),
+			SprintlakNo:         nullableToString(pk.SprintlakNo, "-"),
+		}
+		out = append(out, resp)
+	}
+
+	return out, nil
+}
+
 func toStringPtr(ns sql.NullString) *string {
 	if ns.Valid {
 		return &ns.String
