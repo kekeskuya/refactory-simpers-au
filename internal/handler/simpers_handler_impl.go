@@ -20,6 +20,8 @@ type SimpersHandlerImpl struct {
 	SimpersService service.SimpersService
 }
 
+// GetLampiranKKByNRP implements SimpersHandler.
+
 func NewSimpersHandler(
 	env *config.EnvironmentVariable,
 	simpersService service.SimpersService,
@@ -146,6 +148,21 @@ func (h *SimpersHandlerImpl) GetPangkatByNRP(sqlscan *gin.Context) {
 		return
 	}
 	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Pangkat"), resp)
+}
+
+func (h *SimpersHandlerImpl) GetLampiranKKByNRP(sqlscan *gin.Context) {
+	nrp := sqlscan.Param("nrp")
+	if nrp == "" {
+		err := constants.ErrorMessageInvalidInput
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+	resp, err := h.SimpersService.GetLampiranKKByNRP(nrp)
+	if err != nil {
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+		return
+	}
+	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Lampiran KK"), resp)
 }
 
 // GetNPWPByNRP godoc

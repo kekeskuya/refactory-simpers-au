@@ -13,7 +13,7 @@ type Personel struct {
 	ProfesiNama             sql.NullString `db:"profesi_nama" json:"profesi_nama"`
 	JabatanNamaPanjang      sql.NullString `db:"jabatan_nama_panjang" json:"jabatan_nama_panjang"`
 	StatusPersonelID        sql.NullString `db:"statuspersonel_id" json:"statuspersonel_id"`
-	NIK                     sql.NullString `db:"nik" json:"nik"`
+	NIK                     string         `db:"nik" json:"nik"`
 	PendidikanAsalMasukID   sql.NullString `db:"pendidikan_asalmasuk_id" json:"pendidikan_asalmasuk_id"`
 	PendidikanAsalMasukNama sql.NullString `db:"pendidikan_asalmasuk_nama" json:"pendidikan_asalmasuk_nama"`
 	PendidikanMiliterID     sql.NullString `db:"pendidikan_militer_id" json:"pendidikan_militer_id"`

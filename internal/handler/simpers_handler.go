@@ -10,6 +10,7 @@ type SimpersHandler interface {
 	GetJabatanByNRP(sqlscan *gin.Context)
 	GetTanhorByNRP(sqlscan *gin.Context)
 	GetPangkatByNRP(sqlscan *gin.Context)
+	GetLampiranKKByNRP(sqlscan *gin.Context)
 	GetNPWPByNRP(sqlscan *gin.Context)
 	GetAsabriByNRP(sqlscan *gin.Context)
 	GetPasporByNRP(sqlscan *gin.Context)

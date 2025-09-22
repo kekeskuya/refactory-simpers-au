@@ -48,6 +48,7 @@ func NewRouter(h Handler) *gin.Engine {
 		personel.GET("/:nrp/jabatan", h.SimpersHandler.GetJabatanByNRP)
 		personel.GET("/:nrp/tanhor", h.SimpersHandler.GetTanhorByNRP)
 		personel.GET("/:nrp/pangkat", h.SimpersHandler.GetPangkatByNRP)
+		personel.GET("/:nrp/lampiran_kk", h.SimpersHandler.GetLampiranKKByNRP)
 		personel.GET("/:nrp/npwp", h.SimpersHandler.GetNPWPByNRP)
 		personel.GET("/:nrp/asabri", h.SimpersHandler.GetAsabriByNRP)
 		personel.GET("/:nrp/paspor", h.SimpersHandler.GetPasporByNRP)

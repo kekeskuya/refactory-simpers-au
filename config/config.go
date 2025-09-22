@@ -52,6 +52,16 @@ type EnvironmentVariable struct {
 			Port     string `mapstructure:"PORT"`
 		} `mapstructure:"SQLSERVER"`
 	} `mapstructure:"DB"`
+	DB2 struct {
+		Timeout    time.Duration `mapstructure:"TIMEOUT"`
+		SQLSERVER2 struct {
+			Host     string `mapstructure:"HOST"`
+			Username string `mapstructure:"USERNAME"`
+			Password string `mapstructure:"PASSWORD"`
+			Name     string `mapstructure:"NAME"`
+			Port     string `mapstructure:"PORT"`
+		} `mapstructure:"SQLSERVER"` // 👈 must match .env
+	} `mapstructure:"DB2"`
 	Swagger struct {
 		BasePath    string `mapstructure:"BASE_PATH"`
 		Host        string `mapstructure:"HOST"`

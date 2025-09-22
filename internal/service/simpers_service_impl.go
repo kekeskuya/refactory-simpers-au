@@ -107,11 +107,11 @@ func (s *SimpersServiceImpl) GetPersonelByNRP(nrp string) (out dto.GetPersonelBy
 		statusPersonelID = nil
 	}
 
-	var nik string
-	if personel.NIK.Valid {
-		nik = personel.NIK.String
+	var nik *string
+	if personel.NIK != "" {
+		nik = &personel.NIK
 	} else {
-		nik = "XXX"
+		nik = nil
 	}
 
 	var pendidikan_asalmasuk_id string
@@ -359,6 +359,27 @@ func (s *SimpersServiceImpl) GetPangkatByNRP(nrp string) ([]dto.GetPangkatByNRPR
 			PangkatTMT:          nullableToString(pk.PangkatTMT, "-"),
 			SprintlakTgl:        nullableToString(pk.SprintlakTgl, "-"),
 			SprintlakNo:         nullableToString(pk.SprintlakNo, "-"),
+		}
+		out = append(out, resp)
+	}
+
+	return out, nil
+}
+
+func (s *SimpersServiceImpl) GetLampiranKKByNRP(nrp string) ([]dto.GetLampiranKKByNRPResponse, error) {
+	lampirankks, err := s.personelRepo.GetLampiranKKByNRP(nrp)
+	if err != nil {
+		return nil, err
+	}
+	if len(lampirankks) == 0 {
+		return nil, constants.ErrorMessageDataNotFound
+	}
+	out := make([]dto.GetLampiranKKByNRPResponse, 0, len(lampirankks))
+	for _, kp := range lampirankks {
+		resp := dto.GetLampiranKKByNRPResponse{
+			PersonelID:         kp.PersonelID,
+			DKartuKeluargaID:   nullableToString(kp.DKartuKeluargaID, "-"),
+			DKartuKeluargaNama: nullableToString(kp.DKartuKeluargaNama, "-"),
 		}
 		out = append(out, resp)
 	}

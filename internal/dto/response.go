@@ -15,7 +15,7 @@ type GetPersonelByNRPResponse struct {
 	ProfesiNama             string  `json:"profesi_nama,omitempty"`
 	StatusPersonelID        *string `json:"statuspersonelid,omitempty"`
 	JabatanNamaPanjang      string  `json:"jabatan_nama_panjang,omitempty"`
-	NIK                     string  `json:"nik,omitempty"`
+	NIK                     *string `json:"nik"`
 	PendidikanAsalMasukID   string  `json:"pendidikan_asalmasuk_id,omitempty"`
 	PendidikanAsalMasukNama string  `json:"pendidikan_asalmasuk_nama,omitempty"`
 	PendidikanMiliterID     string  `json:"pendidikan_militer_id,omitempty"`
@@ -93,11 +93,19 @@ func ToGetPersonelByNRPResponse(m model.Personel) GetPersonelByNRPResponse {
 		statusPersonelID = nil
 	}
 
-	var NIK string
-	if m.NIK.Valid {
-		NIK = m.NIK.String
+	// var NIK string
+	// if m.NIK.Valid {
+	// 	NIK = m.NIK.String
+	// } else {
+	// 	NIK = "XXX"
+	// }
+
+	var NIK *string
+	if m.NIK != "" {
+		NIK = &m.NIK
 	} else {
-		NIK = "XXX"
+		defaultNIK := "XXX"
+		NIK = &defaultNIK
 	}
 
 	var JabatanNamaPanjang string

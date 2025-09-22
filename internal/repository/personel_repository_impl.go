@@ -89,6 +89,36 @@ func (r *PersonelRepoImpl) GetByNRP(personel_id string) (out model.Personel, err
 	return out, err
 }
 
+func (r *PersonelRepoImpl) GetByName(name string) (out []model.Personel, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
+	defer cancel()
+	name = strings.TrimSpace(name)
+	query := `SELECT Personel_Nama, personel_id, StatusPersonel_Id FROM personel WHERE Personel_Nama LIKE @p1 ORDER BY personel_id DESC`
+	name = "%" + name + "%"
+	fmt.Println("DEBUG QUERY Name:", query, " Name:", name)
+	err = sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, name)
+	if sqlscan.NotFound(err) {
+		return out, nil
+	}
+	return out, err
+}
+
+/*
+func (r *PersonelRepoImpl) GetLampiranKKByNRP(name string) (out []model.Personel, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB2.Timeout)
+	defer cancel()
+	name = strings.TrimSpace(name)
+	query := `SELECT D_Kartu_Keluarga_id, D_Kartu_keluarga_nama FROM Dokumen_kartu_keluarga WHERE Personel_Nama LIKE @p1 ORDER BY personel_id DESC`
+	name = "%" + name + "%"
+	fmt.Println("DEBUG QUERY Name:", query, " Name:", name)
+	err = sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, name)
+	if sqlscan.NotFound(err) {
+		return out, nil
+	}
+	return out, err
+}
+*/
+
 // func (r *PersonelRepoImpl) GetFamilyCardByNRP(personel_id string) (out []model.FamilyCard, err error) {
 // 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 // 	defer cancel()
@@ -263,6 +293,22 @@ func (r *PersonelRepoImpl) GetPangkatByNRP(nrp string) ([]model.Pangkat, error) 
 	err := sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, nrp)
 	if sqlscan.NotFound(err) {
 		return []model.Pangkat{}, nil
+	}
+	return out, err
+
+}
+
+func (r *PersonelRepoImpl) GetLampiranKKByNRP(nrp string) (out []model.LampiranKK, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB2.Timeout)
+	defer cancel()
+	nrp = strings.TrimSpace(nrp)
+	query := `SELECT D_Kartu_Keluarga_id as d_kartu_keluarga_id
+	 			   , D_Kartu_keluarga_nama as d_kartu_keluarga_nama
+	          FROM Dokumen_kartu_keluarga WHERE Personel_id =  @p1 `
+	fmt.Println("DEBUG QUERY DB2 NRP:", query, " NRP:", nrp)
+	err = sqlscan.Select(ctx, r.db.SQLserver2.Conn, &out, query, nrp)
+	if sqlscan.NotFound(err) {
+		return out, nil
 	}
 	return out, err
 }
