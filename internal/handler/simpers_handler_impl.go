@@ -246,6 +246,22 @@ func (h *SimpersHandlerImpl) GetPasporByNRP(sqlscan *gin.Context) {
 	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, constants.DataPaspor), resp)
 }
 
+func (h *SimpersHandlerImpl) CreateLampiranDokumen(sqlscan *gin.Context) {
+	var req dto.DokumenLampiranByNRPRequest
+	if err := sqlscan.ShouldBindJSON(&req); err != nil {
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	resp, err := h.SimpersService.CreateLampiranDokumen(req)
+	if err != nil {
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+		return
+	}
+
+	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgLampiranSuccess, "Data Lampiran"), resp)
+}
+
 // CreateLampiran godoc
 // @Summary Menambahkan lampiran berdasarkan id dokumen dan tipe dokumen
 // @Tags Lampiran

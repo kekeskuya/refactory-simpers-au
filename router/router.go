@@ -53,7 +53,7 @@ func NewRouter(h Handler) *gin.Engine {
 		personel.GET("/:nrp/asabri", h.SimpersHandler.GetAsabriByNRP)
 		personel.GET("/:nrp/paspor", h.SimpersHandler.GetPasporByNRP)
 	}
-
+	r.POST("/lampiran", h.SimpersHandler.CreateLampiranDokumen)
 	r.POST("/:tipe-dokumen/:id-dokumen/lampiran", h.SimpersHandler.CreateLampiran)
 
 	return r

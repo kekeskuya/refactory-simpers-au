@@ -15,4 +15,5 @@ type SimpersHandler interface {
 	GetAsabriByNRP(sqlscan *gin.Context)
 	GetPasporByNRP(sqlscan *gin.Context)
 	CreateLampiran(sqlscan *gin.Context)
+	CreateLampiranDokumen(sqlscan *gin.Context)
 }

@@ -14,6 +14,7 @@ type PersonelRepository interface {
 	GetTanhorByNRP(nrp string) ([]model.Tanhor, error)
 	GetPangkatByNRP(nrp string) ([]model.Pangkat, error)
 	GetLampiranKKByNRP(nrp string) ([]model.LampiranKK, error)
+	CreateLampiranDokumen(in model.DokumenLampiran) (id int, err error)
 	//	Create(in model.Personel) (err error)
 	//	GetAll() (out []model.Personel, err error)
 	//	Update(in model.Personel) (err error)

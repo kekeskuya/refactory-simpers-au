@@ -8,6 +8,7 @@ import (
 	"refactory-simpers-au/internal/dto"
 	"refactory-simpers-au/internal/model"
 	"refactory-simpers-au/internal/repository"
+	"time"
 )
 
 type SimpersServiceImpl struct {
@@ -214,6 +215,32 @@ func (s *SimpersServiceImpl) GetFamilyCardByNRP(nrp string) ([]dto.GetFamilyCard
 
 	out := make([]dto.GetFamilyCardByNRPResponse, 0, len(familyCards))
 	for _, fc := range familyCards {
+
+		var NamaHubunganKeluarga string
+		if fc.HubunganKeluarga.Valid {
+			switch fc.HubunganKeluarga.String {
+			case "AY":
+				NamaHubunganKeluarga = "Ayah"
+			case "IB":
+				NamaHubunganKeluarga = "Ibu"
+			case "SU":
+				NamaHubunganKeluarga = "Suami"
+			case "IS":
+				NamaHubunganKeluarga = "Istri"
+			case "AN":
+				NamaHubunganKeluarga = "Anak"
+			case "AM":
+				NamaHubunganKeluarga = "Ayah Mertua"
+			case "IM":
+				NamaHubunganKeluarga = "Ibu Mertua"
+			default:
+				NamaHubunganKeluarga = "Saudara"
+			}
+			//NamaHubunganKeluarga = fc.HubunganKeluarga.String
+		} else {
+			NamaHubunganKeluarga = "-"
+		}
+
 		resp := dto.GetFamilyCardByNRPResponse{
 			PersonelID:           fc.PersonelID,
 			NamaKeluarga:         nullableToString(fc.NamaKeluarga, "-"),
@@ -223,7 +250,7 @@ func (s *SimpersServiceImpl) GetFamilyCardByNRP(nrp string) ([]dto.GetFamilyCard
 			JenisKelaminKeluarga: nullableToString(fc.JenisKelaminKeluarga, "-"),
 			StatusNikahKeluarga:  nullableToString(fc.StatusNikahKeluarga, "-"),
 			PekerjaanKeluarga:    nullableToString(fc.PekerjaanKeluarga, "-"),
-			HubunganKeluarga:     nullableToString(fc.HubunganKeluarga, "-"),
+			HubunganKeluarga:     NamaHubunganKeluarga,
 		}
 		out = append(out, resp)
 	}
@@ -456,6 +483,31 @@ func (s *SimpersServiceImpl) GetPasporByNRP(nrp string) (out dto.GetPasporByNRPR
 	}
 
 	return
+}
+
+// Replace dto.PostDokumenLampiranByNRPRequest with an existing type, e.g., dto.CreateLampiranRequest
+func (s *SimpersServiceImpl) CreateLampiranDokumen(req dto.DokumenLampiranByNRPRequest) (out dto.PostDokumenLampiranByNRPResponse, err error) {
+	lampiran := model.DokumenLampiran{
+		PersonelID: uint64(req.PersonelID),
+		RID:        sql.NullString{String: req.RID, Valid: req.RID != ""},
+		RTipe:      sql.NullString{String: req.RTipe, Valid: req.RTipe != ""},
+		CreateDate: time.Now(),
+		LinkUrl:    sql.NullString{String: req.LinkUrl, Valid: req.LinkUrl != ""},
+	}
+
+	id, err := s.personelRepo.CreateLampiranDokumen(lampiran)
+	if err != nil {
+		return dto.PostDokumenLampiranByNRPResponse{}, err
+	}
+
+	return dto.PostDokumenLampiranByNRPResponse{
+		LampiranID: id,
+		PersonelID: lampiran.PersonelID,
+		RID:        lampiran.RID.String,
+		RTipe:      lampiran.RTipe.String,
+		CreateDate: lampiran.CreateDate,
+		LinkUrl:    lampiran.LinkUrl.String,
+	}, nil
 }
 
 func (s *SimpersServiceImpl) CreateLampiran(req dto.CreateLampiranRequest, docID string, docType string) (out dto.CreateLampiranResponse, err error) {

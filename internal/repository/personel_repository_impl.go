@@ -103,48 +103,6 @@ func (r *PersonelRepoImpl) GetByName(name string) (out []model.Personel, err err
 	return out, err
 }
 
-/*
-func (r *PersonelRepoImpl) GetLampiranKKByNRP(name string) (out []model.Personel, err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB2.Timeout)
-	defer cancel()
-	name = strings.TrimSpace(name)
-	query := `SELECT D_Kartu_Keluarga_id, D_Kartu_keluarga_nama FROM Dokumen_kartu_keluarga WHERE Personel_Nama LIKE @p1 ORDER BY personel_id DESC`
-	name = "%" + name + "%"
-	fmt.Println("DEBUG QUERY Name:", query, " Name:", name)
-	err = sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, name)
-	if sqlscan.NotFound(err) {
-		return out, nil
-	}
-	return out, err
-}
-*/
-
-// func (r *PersonelRepoImpl) GetFamilyCardByNRP(personel_id string) (out []model.FamilyCard, err error) {
-// 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
-// 	defer cancel()
-
-// 	personel_id = strings.TrimSpace(personel_id)
-
-// 	query := `SELECT Personel_Id AS personel_id,
-// 					 nama AS nama_keluarga,
-// 					 alamat AS alamat_keluarga,
-// 					 tempat_lahir AS tempat_lahir_keluarga,
-// 					 tanggal_lahir AS tanggal_lahir_keluarga,
-// 					 jenis_kelamin AS jenis_kelamin_keluarga,
-// 					 status_nikah AS status_nikah_keluarga,
-// 					 hubungan_keluarga AS hubungan_keluarga,
-// 					 pekerjaan AS pekerjaan_keluarga
-// 			  FROM M_keluarga
-// 	          WHERE Personel_Id = @p1`
-
-// 	fmt.Println("DEBUG QUERY Family :", query, " NRP:", personel_id)
-// 	err = sqlscan.Select(ctx, r.db.SQLserver.Conn, &out, query, personel_id)
-// 	if sqlscan.NotFound(err) {
-// 		return out, nil
-// 	}
-// 	return out, err
-// }
-
 func (r *PersonelRepoImpl) GetFamilyCardByNRP(nrp string) ([]model.FamilyCard, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
@@ -311,6 +269,16 @@ func (r *PersonelRepoImpl) GetLampiranKKByNRP(nrp string) (out []model.LampiranK
 		return out, nil
 	}
 	return out, err
+}
+
+func (r *PersonelRepoImpl) CreateLampiranDokumen(in model.DokumenLampiran) (id int, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
+	defer cancel()
+	query := `INSERT INTO Dokumen_Lampiran (personel_id, r_id, r_tipe, url) VALUES (@p1, @p2, @p3, @p4); SELECT SCOPE_IDENTITY()`
+	fmt.Println("DEBUG POST QUERY DB2 NRP:", query)
+	// exithook.AddLog(fmt.Sprintf("DEBUG POST QUERY DB2 NRP: %s", query))
+	err = r.db.SQLserver2.Conn.QueryRowContext(ctx, query, in.PersonelID, in.RID, in.RTipe, in.LinkUrl).Scan(&id)
+	return id, err
 }
 
 // func (r *PersonelRepoImpl) Create(in model.Personel) (err error) {
