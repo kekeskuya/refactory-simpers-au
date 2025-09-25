@@ -274,10 +274,10 @@ func (r *PersonelRepoImpl) GetLampiranKKByNRP(nrp string) (out []model.LampiranK
 func (r *PersonelRepoImpl) CreateLampiranDokumen(in model.DokumenLampiran) (id int, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
-	query := `INSERT INTO Dokumen_Lampiran (personel_id, r_id, r_tipe, url) VALUES (@p1, @p2, @p3, @p4); SELECT SCOPE_IDENTITY()`
+	query := `INSERT INTO lampiran (personel_id, r_id, r_tipe, url) VALUES (@p1, @p2, @p3, @p4); SELECT SCOPE_IDENTITY()`
 	fmt.Println("DEBUG POST QUERY DB2 NRP:", query)
 	// exithook.AddLog(fmt.Sprintf("DEBUG POST QUERY DB2 NRP: %s", query))
-	err = r.db.SQLserver2.Conn.QueryRowContext(ctx, query, in.PersonelID, in.RID, in.RTipe, in.LinkUrl).Scan(&id)
+	err = r.db.SQLserver2.Conn.QueryRowContext(ctx, query, in.PersonelID, in.RID, in.RTipe, in.URL).Scan(&id)
 	return id, err
 }
 

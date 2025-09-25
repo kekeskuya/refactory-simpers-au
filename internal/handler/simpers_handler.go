@@ -1,10 +1,13 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 type SimpersHandler interface {
 	GetPersonelByNRP(sqlscan *gin.Context)
 	GetFamilyCardByNRP(sqlscan *gin.Context)
+	GetDokumenByNRP(sqlscan *gin.Context)
 	GetDikMilByNRP(sqlscan *gin.Context)
 	GetDikUmByNRP(sqlscan *gin.Context)
 	GetJabatanByNRP(sqlscan *gin.Context)

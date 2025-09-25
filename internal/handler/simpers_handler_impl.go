@@ -192,6 +192,87 @@ func (h *SimpersHandlerImpl) GetNPWPByNRP(sqlscan *gin.Context) {
 	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, constants.DataNPWP), resp)
 }
 
+func (h *SimpersHandlerImpl) GetDokumenByNRP(sqlscan *gin.Context) {
+	nrp := sqlscan.Param("nrp")
+	doc_type := sqlscan.Param("tipe_dokumen")
+
+	if nrp == "" {
+		err := constants.ErrorMessageInvalidInput
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	if doc_type == "" {
+		err := constants.ErrorMessageInvalidInput
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	// resp, err := h.SimpersService.GetDokumenByNRP(nrp)
+	// if err != nil {
+	// 	lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+	// 	return
+	// }
+
+	switch doc_type {
+	case "kartu_keluarga":
+		//fmt.Println("DEBUG DOC TYPE :", doc_type)
+		resp, err := h.SimpersService.GetFamilyCardByNRP(nrp)
+		if err != nil {
+			lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+			return
+		}
+		lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Kartu Keluarga"), resp)
+	case "pendidikan_militer":
+		//fmt.Println("DEBUG DOC TYPE :", doc_type)
+		resp, err := h.SimpersService.GetDikMilByNRP(nrp)
+		if err != nil {
+			lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+			return
+		}
+		lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Pendidikan Militer"), resp)
+	case "pendidikan_umum":
+		//fmt.Println("DEBUG DOC TYPE :", doc_type)
+		resp, err := h.SimpersService.GetDikUmByNRP(nrp)
+		if err != nil {
+			lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+			return
+		}
+		lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Pendidikan Umum"), resp)
+	case "jabatan":
+		//fmt.Println("DEBUG DOC TYPE :", doc_type)
+		resp, err := h.SimpersService.GetJabatanByNRP(nrp)
+		if err != nil {
+			lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+			return
+		}
+		lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Jabatan"), resp)
+	case "tanhor":
+		//fmt.Println("DEBUG DOC TYPE :", doc_type)
+		resp, err := h.SimpersService.GetTanhorByNRP(nrp)
+		if err != nil {
+			lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+			return
+		}
+		lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Tanda Honor"), resp)
+	case "pangkat":
+		//fmt.Println("DEBUG DOC TYPE :", doc_type)
+		resp, err := h.SimpersService.GetPangkatByNRP(nrp)
+		if err != nil {
+			lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+			return
+		}
+		lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, "Pangkat"), resp)
+	default:
+		fmt.Println("DEBUG DOC TYPE :")
+		err := errors.New("document category not supported")
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
+		return
+
+	}
+
+}
+
 // GetAsabriByNRP godoc
 // @Summary Get Asabri berdasarkan NRP
 // @Tags Personel
@@ -244,22 +325,6 @@ func (h *SimpersHandlerImpl) GetPasporByNRP(sqlscan *gin.Context) {
 	}
 
 	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgDokumenSuccess, constants.DataPaspor), resp)
-}
-
-func (h *SimpersHandlerImpl) CreateLampiranDokumen(sqlscan *gin.Context) {
-	var req dto.DokumenLampiranByNRPRequest
-	if err := sqlscan.ShouldBindJSON(&req); err != nil {
-		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
-		return
-	}
-
-	resp, err := h.SimpersService.CreateLampiranDokumen(req)
-	if err != nil {
-		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
-		return
-	}
-
-	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgLampiranSuccess, "Data Lampiran"), resp)
 }
 
 // CreateLampiran godoc
@@ -316,4 +381,26 @@ func (h *SimpersHandlerImpl) CreateLampiran(sqlscan *gin.Context) {
 	}
 
 	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgLampiranSuccess, docType), resp)
+}
+
+// CreateLampiranDokumen implements SimpersHandler interface
+// func (h *SimpersHandlerImpl) CreateLampiranDokumen(ctx *gin.Context) {
+// 	// TODO: Implement the actual logic or delegate to an existing method if appropriate
+// 	lib.RespondError(ctx, http.StatusNotImplemented, "not implemented", nil)
+// }
+
+func (h *SimpersHandlerImpl) CreateLampiranDokumen(sqlscan *gin.Context) {
+	var req dto.DokumenLampiranByNRPRequest
+	if err := sqlscan.ShouldBindJSON(&req); err != nil {
+		lib.RespondError(sqlscan, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	resp, err := h.SimpersService.CreateLampiranDokumen(req)
+	if err != nil {
+		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
+		return
+	}
+
+	lib.RespondSuccess(sqlscan, http.StatusOK, fmt.Sprintf(lib.MsgLampiranSuccess, "Data Lampiran"), resp)
 }

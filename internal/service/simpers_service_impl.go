@@ -492,7 +492,7 @@ func (s *SimpersServiceImpl) CreateLampiranDokumen(req dto.DokumenLampiranByNRPR
 		RID:        sql.NullString{String: req.RID, Valid: req.RID != ""},
 		RTipe:      sql.NullString{String: req.RTipe, Valid: req.RTipe != ""},
 		CreateDate: time.Now(),
-		LinkUrl:    sql.NullString{String: req.LinkUrl, Valid: req.LinkUrl != ""},
+		URL:        sql.NullString{String: req.URL, Valid: req.URL != ""},
 	}
 
 	id, err := s.personelRepo.CreateLampiranDokumen(lampiran)
@@ -501,12 +501,12 @@ func (s *SimpersServiceImpl) CreateLampiranDokumen(req dto.DokumenLampiranByNRPR
 	}
 
 	return dto.PostDokumenLampiranByNRPResponse{
-		LampiranID: id,
+		ID:         id,
 		PersonelID: lampiran.PersonelID,
 		RID:        lampiran.RID.String,
 		RTipe:      lampiran.RTipe.String,
 		CreateDate: lampiran.CreateDate,
-		LinkUrl:    lampiran.LinkUrl.String,
+		URL:        lampiran.URL.String,
 	}, nil
 }
 
