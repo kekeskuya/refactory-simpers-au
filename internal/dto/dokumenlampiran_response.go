@@ -22,7 +22,7 @@ import "time"
 
 type DokumenLampiranByNRPRequest struct {
 	ID         int       `json:"id"`
-	PersonelID uint64    `json:"personel_id"`
+	PersonelID int64     `json:"personel_id"`
 	RID        string    `json:"r_id"`
 	RTipe      string    `json:"r_tipe"`
 	CreateDate time.Time `json:"create_date"`
@@ -31,7 +31,7 @@ type DokumenLampiranByNRPRequest struct {
 
 type PostDokumenLampiranByNRPResponse struct {
 	ID         int       `json:"id"`
-	PersonelID uint64    `json:"personel_id"`
+	PersonelID int64     `json:"personel_id"`
 	RID        string    `json:"r_id"`
 	RTipe      string    `json:"r_tipe"`
 	CreateDate time.Time `json:"create_date"`

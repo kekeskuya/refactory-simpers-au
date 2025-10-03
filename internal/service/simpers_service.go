@@ -11,7 +11,7 @@ type SimpersService interface {
 	GetTanhorByNRP(nrp string) ([]dto.GetTanhorByNRPResponse, error)
 	GetPangkatByNRP(nrp string) ([]dto.GetPangkatByNRPResponse, error)
 	GetLampiranKKByNRP(nrp string) ([]dto.GetLampiranKKByNRPResponse, error)
-	CreateLampiranDokumen(req dto.DokumenLampiranByNRPRequest) (out dto.PostDokumenLampiranByNRPResponse, err error)
+	CreateLampiranDokumen(req dto.DokumenLampiranByNRPRequest, nrp string) (out dto.PostDokumenLampiranByNRPResponse, err error)
 	GetNPWPByNRP(nrp string) (out dto.GetNPWPByNRPResponse, err error)
 	GetAsabriByNRP(nrp string) (out dto.GetAsabriByNRPResponse, err error)
 	GetPasporByNRP(nrp string) (out dto.GetPasporByNRPResponse, err error)

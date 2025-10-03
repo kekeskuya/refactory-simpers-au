@@ -486,23 +486,25 @@ func (s *SimpersServiceImpl) GetPasporByNRP(nrp string) (out dto.GetPasporByNRPR
 }
 
 // Replace dto.PostDokumenLampiranByNRPRequest with an existing type, e.g., dto.CreateLampiranRequest
-func (s *SimpersServiceImpl) CreateLampiranDokumen(req dto.DokumenLampiranByNRPRequest) (out dto.PostDokumenLampiranByNRPResponse, err error) {
+func (s *SimpersServiceImpl) CreateLampiranDokumen(
+	req dto.DokumenLampiranByNRPRequest,
+	nrp string,
+) (dto.PostDokumenLampiranByNRPResponse, error) {
 	lampiran := model.DokumenLampiran{
-		PersonelID: uint64(req.PersonelID),
 		RID:        sql.NullString{String: req.RID, Valid: req.RID != ""},
 		RTipe:      sql.NullString{String: req.RTipe, Valid: req.RTipe != ""},
 		CreateDate: time.Now(),
 		URL:        sql.NullString{String: req.URL, Valid: req.URL != ""},
 	}
 
-	id, err := s.personelRepo.CreateLampiranDokumen(lampiran)
+	id, personelID, err := s.personelRepo.CreateLampiranDokumen(lampiran, nrp)
 	if err != nil {
 		return dto.PostDokumenLampiranByNRPResponse{}, err
 	}
 
 	return dto.PostDokumenLampiranByNRPResponse{
 		ID:         id,
-		PersonelID: lampiran.PersonelID,
+		PersonelID: int64(personelID),
 		RID:        lampiran.RID.String,
 		RTipe:      lampiran.RTipe.String,
 		CreateDate: lampiran.CreateDate,

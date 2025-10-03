@@ -396,7 +396,9 @@ func (h *SimpersHandlerImpl) CreateLampiranDokumen(sqlscan *gin.Context) {
 		return
 	}
 
-	resp, err := h.SimpersService.CreateLampiranDokumen(req)
+	nrp := sqlscan.Param("nrp")
+
+	resp, err := h.SimpersService.CreateLampiranDokumen(req, nrp)
 	if err != nil {
 		lib.RespondError(sqlscan, http.StatusInternalServerError, err.Error(), err)
 		return

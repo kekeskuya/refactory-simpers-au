@@ -271,14 +271,28 @@ func (r *PersonelRepoImpl) GetLampiranKKByNRP(nrp string) (out []model.LampiranK
 	return out, err
 }
 
-func (r *PersonelRepoImpl) CreateLampiranDokumen(in model.DokumenLampiran) (id int, err error) {
+func (r *PersonelRepoImpl) CreateLampiranDokumen(in model.DokumenLampiran, nrp string) (id int, personelID int, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.env.DB.Timeout)
 	defer cancel()
-	query := `INSERT INTO lampiran (personel_id, r_id, r_tipe, url) VALUES (@p1, @p2, @p3, @p4); SELECT SCOPE_IDENTITY()`
+	//query := `INSERT INTO lampiran (personel_id, r_id, r_tipe, url) VALUES (@p1, @p2, @p3, @p4); SELECT SCOPE_IDENTITY()`
+	//query := `INSERT INTO lampiran (Personel_id, R_id, R_tipe, URL, Create_Date) VALUES (@p1, @p2, @p3, @p4, GETDATE()); SELECT SCOPE_IDENTITY()`
+
+	query := `
+        INSERT INTO Lampiran (personel_id, r_id, r_tipe, create_date, url)
+        VALUES (@p5, @p1, @p2, @p3, @p4);
+
+        
+    `
+
 	fmt.Println("DEBUG POST QUERY DB2 NRP:", query)
 	// exithook.AddLog(fmt.Sprintf("DEBUG POST QUERY DB2 NRP: %s", query))
-	err = r.db.SQLserver2.Conn.QueryRowContext(ctx, query, in.PersonelID, in.RID, in.RTipe, in.URL).Scan(&id)
-	return id, err
+	err = r.db.SQLserver2.Conn.QueryRowContext(ctx, query, in.RID, in.RTipe, in.CreateDate, in.URL, nrp).Scan(&id, &personelID)
+
+	if err != nil {
+		return 0, 0, err
+	}
+
+	return id, personelID, nil
 }
 
 // func (r *PersonelRepoImpl) Create(in model.Personel) (err error) {

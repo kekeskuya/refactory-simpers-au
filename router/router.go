@@ -43,18 +43,18 @@ func NewRouter(h Handler) *gin.Engine {
 	{
 		personel.GET("/:nrp", h.SimpersHandler.GetPersonelByNRP)
 		personel.GET("/:nrp/:tipe_dokumen", h.SimpersHandler.GetDokumenByNRP)
+		//personel.GET("/:nrp/lampiran_kk", h.SimpersHandler.GetLampiranKKByNRP)
 		// personel.GET("/:nrp/kartu_keluarga", h.SimpersHandler.GetFamilyCardByNRP)
 		// personel.GET("/:nrp/dikmil", h.SimpersHandler.GetDikMilByNRP)
 		// personel.GET("/:nrp/dikum", h.SimpersHandler.GetDikUmByNRP)
 		// personel.GET("/:nrp/jabatan", h.SimpersHandler.GetJabatanByNRP)
 		// personel.GET("/:nrp/tanhor", h.SimpersHandler.GetTanhorByNRP)
 		// personel.GET("/:nrp/pangkat", h.SimpersHandler.GetPangkatByNRP)
-		personel.GET("/:nrp/lampiran_kk", h.SimpersHandler.GetLampiranKKByNRP)
 		//personel.GET("/:nrp/npwp", h.SimpersHandler.GetNPWPByNRP)
 		//personel.GET("/:nrp/asabri", h.SimpersHandler.GetAsabriByNRP)
 		//personel.GET("/:nrp/paspor", h.SimpersHandler.GetPasporByNRP)
 	}
-	r.POST("/lampiran", h.SimpersHandler.CreateLampiranDokumen)
+	personel.POST("/:nrp/lampiran", h.SimpersHandler.CreateLampiranDokumen)
 	//r.POST("/:tipe-dokumen/:id-dokumen/lampiran", h.SimpersHandler.CreateLampiran)
 
 	return r
