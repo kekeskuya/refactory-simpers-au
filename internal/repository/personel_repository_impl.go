@@ -280,8 +280,7 @@ func (r *PersonelRepoImpl) CreateLampiranDokumen(in model.DokumenLampiran, nrp s
 	query := `
         INSERT INTO Lampiran (personel_id, r_id, r_tipe, create_date, url)
         VALUES (@p5, @p1, @p2, @p3, @p4);
-
-        
+		SELECT SCOPE_IDENTITY() AS id, personel_id FROM Lampiran WHERE id = SCOPE_IDENTITY();
     `
 
 	fmt.Println("DEBUG POST QUERY DB2 NRP:", query)
